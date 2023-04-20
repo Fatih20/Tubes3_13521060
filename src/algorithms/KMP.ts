@@ -2,10 +2,59 @@
 
 class KMP extends Algorithm {
 
+    borderFunction(target: String) : number[] {
+        let ret: number[] = [];
+        let len = target.length
+        let i = 1
+        let j = 0
+
+        for (let k = 0; k < len; k++) {
+            ret.push(0)
+        }
+
+        while (i < len) {
+            // console.log(target[i], target[j], i, j, ret)
+            if (target[i] == target[j]) {
+
+                ret[i] = j + 1
+                i++
+                j++
+            } else if (j > 0) {
+                j = ret[j-1]
+            } else {
+                ret[i] = 0
+                i++
+            }
+        }
+        return ret.splice(0, len-1)
+    }
 
     check(target: String, question: String): boolean {
         // KMP Algorithm
-        return true
+        let lenTarget = target.length
+        let lenQuestion = question.length
+
+        let border = this.borderFunction(target)
+
+        let i = 0 // question iterator
+        let j = 0 // target iterator
+
+        while (i < lenQuestion) {
+            if (target[j] == question[i]) {
+                if (j == lenTarget -1) {
+                    // end of target reached
+                    return true
+                }
+                // Not end of target, increment i and j
+                i++
+                j++
+            } else if (j > 0) {
+                // console.log(j, border[j-1])
+                // Pergeseran KMP menggunakan Border function
+                j = border[j-1]
+            } else { i++ }
+        }
+        return false
 
     }
 
