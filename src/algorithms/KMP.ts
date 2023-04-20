@@ -2,6 +2,11 @@
 
 class KMP extends Algorithm {
 
+    /**
+     *
+     * @param target target pattern that will be used to generate border
+     * @returns border array
+     */
     borderFunction(target: String) : number[] {
         let ret: number[] = [];
         let len = target.length
@@ -29,6 +34,11 @@ class KMP extends Algorithm {
         return ret.splice(0, len-1)
     }
 
+    /**
+     *
+     * @param target substring from input
+     * @param question question to be matched against
+     */
     check(target: String, question: String): boolean {
         // KMP Algorithm
         let lenTarget = target.length
