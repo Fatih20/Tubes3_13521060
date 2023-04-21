@@ -8,10 +8,10 @@ export default function Home() {
   const { data: session } = useSession();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-9xl font-bold text-center">
+      <h1 className="text-7xl font-bold text-center">
         {session
-          ? `${session.user?.name} sedang makan gratis at Kenneth's`
-          : "POV : Lu diusir dari rumah Kenneth"}
+          ? `${session.user?.name} sedang makan gratis at Kenneth's house`
+          : "Lu diusir dari rumah Kenneth"}
       </h1>
       {session ? (
         <button onClick={() => signOut()}>Sign Out</button>
