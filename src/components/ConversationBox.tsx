@@ -4,9 +4,29 @@ import Image from "next/image";
 function ConversationBox() {
   const { data: session } = useSession();
   return (
-    <div className="flex-grow bg-slate-500 w-full flex flex-col items-start justify-start p-4 rounded-md gap-4">
+    <div className="flex-grow bg-slate-500 w-full flex flex-col items-start justify-start p-4 rounded-md gap-4 overflow-y-scroll">
       {[
         { text: "Bruh", profilePicture: undefined, user: false },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
+        { text: "Bruh", profilePicture: session?.user?.image, user: true },
         { text: "Bruh", profilePicture: session?.user?.image, user: true },
       ].map(({ profilePicture, text, user }) => (
         <Chat
@@ -29,7 +49,7 @@ export type ChatProps = {
 function Chat({ text, profilePicture, user }: ChatProps) {
   return (
     <div
-      className={`flex w-full items-start justify-center gap-4 ${
+      className={`flex w-full items-start justify-start gap-4 ${
         user ? "flex-row-reverse" : "flex-row"
       }`}
     >
