@@ -1,12 +1,13 @@
 import { useStringMatcherContext } from "@/contexts/StringMatcher";
 import { signOut } from "next-auth/react";
+import ChatHistory from "./ChatHistory";
 
 function Sidebar() {
   const { stringMatcher, setBM, setKMP } = useStringMatcherContext();
   return (
     <div className="flex flex-col items-center justify-start w-fit px-8 py-4">
-      <h1 className="text-3xl font-bold text-center">Rinum</h1>
-      <div className="h-full flex-grow"></div>
+      <h1 className="text-3xl font-bold text-center mb-5">Rinum</h1>
+      <ChatHistory />
       <div className="flex-row flex gap-2 mb-4">
         <button
           className={`btn btn-xs w-1/2 ${
