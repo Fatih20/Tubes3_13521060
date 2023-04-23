@@ -6,6 +6,8 @@ abstract class Algorithm {
      * @param target substring from input
      * @param question question to be matched against
      */
-    abstract check(target: String, question: String): boolean;
+    abstract check(target: string, question: string): boolean;
     // Target is the substring, question is the subject to be matched
 }
+
+export { Algorithm }

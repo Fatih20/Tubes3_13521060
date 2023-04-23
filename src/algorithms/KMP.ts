@@ -1,4 +1,4 @@
-
+import { Algorithm } from './Algorithm';
 
 class KMP extends Algorithm {
 
@@ -7,7 +7,7 @@ class KMP extends Algorithm {
      * @param target target pattern that will be used to generate border
      * @returns border array
      */
-    borderFunction(target: String) : number[] {
+    borderFunction(target: string) : number[] {
         let ret: number[] = [];
         let len = target.length
         let i = 1
@@ -39,7 +39,7 @@ class KMP extends Algorithm {
      * @param target substring from input
      * @param question question to be matched against
      */
-    check(target: String, question: String): boolean {
+    check(target: string, question: string): boolean {
         // KMP Algorithm
         let lenTarget = target.length
         let lenQuestion = question.length
@@ -69,3 +69,5 @@ class KMP extends Algorithm {
     }
 
 }
+
+export { KMP }

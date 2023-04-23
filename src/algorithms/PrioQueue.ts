@@ -1,12 +1,12 @@
 
 class PrioQueue {
-    queue: [number, String][];
+    queue: [number, string][];
 
     constructor() {
         this.queue = [];
     }
 
-    enqueue(prio: number, element: String): void {
+    enqueue(prio: number, element: string): void {
         if (this.queue.length == 0) {
             this.queue.push([prio, element]);
             return;
@@ -23,7 +23,7 @@ class PrioQueue {
 
     }
 
-    dequeue(): [number, String] | undefined {
+    dequeue(): [number, string] | undefined {
         return this.queue.shift();
     }
 

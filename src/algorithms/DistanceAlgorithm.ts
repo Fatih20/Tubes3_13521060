@@ -11,3 +11,5 @@ class DistanceAlgorithm{
         return 0;
     }
 }
+
+export { DistanceAlgorithm }

@@ -1,4 +1,7 @@
 import { evaluateMathExpression, hasHigherPrecedence, applyOperator } from "./Math"
+import { Main } from "./Main"
+import { Algorithm } from "./Algorithm"
+import { KMP } from "./KMP"
 
 enum Questions {
     askQuestion = 0,
@@ -36,7 +39,7 @@ const classifyQuestion = (question: string): number => {
         let ret = Questions.rmQuestion
         return ret
     }
-    else if (!QuestionPattern.test(question)) {
+    else if (QuestionPattern.test(question)) {
 
         let ret = Questions.askQuestion
         return ret
@@ -46,9 +49,14 @@ const classifyQuestion = (question: string): number => {
     }
 }
 
-const callQuestion = (question: string): void | string => {
+const callQuestion = (question: string): void | string | string[] => {
     switch (classifyQuestion(question)) {
-        case 0: break;
+        case 0: let main = new Main(["List of questions placeholder"]);
+                let KMPOn = true;   // Get value from toggle
+                let ret: string[] = main.getMatchingQuestion(question, KMPOn);
+                console.log(ret)
+                return ret;
+                break;
         case 1: let p = question.match(higherMathExpr);
                 console.log(p)
                 if (p != null) {
