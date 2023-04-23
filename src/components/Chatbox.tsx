@@ -1,4 +1,4 @@
-import { useStringMatcherContext } from "@/contexts/StringMatcher";
+import { useStringMatcherContext } from "@/contexts/StringMatcherProvider";
 import { useState } from "react";
 import ConversationBox from "./ConversationBox";
 

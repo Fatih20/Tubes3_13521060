@@ -2,18 +2,23 @@ import "@/styles/globals.css";
 import type { AppType } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { type Session } from "next-auth";
-import StringMatcher from "@/contexts/StringMatcher";
+import StringMatcherProvider from "@/contexts/StringMatcherProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const App: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <StringMatcher>
-        <Component {...pageProps} />
-      </StringMatcher>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <StringMatcherProvider>
+          <Component {...pageProps} />
+        </StringMatcherProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   );
 };
 

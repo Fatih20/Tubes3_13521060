@@ -1,4 +1,4 @@
-import { useStringMatcherContext } from "@/contexts/StringMatcher";
+import { useStringMatcherContext } from "@/contexts/StringMatcherProvider";
 import { signOut } from "next-auth/react";
 import ChatHistory from "./ChatHistory";
 
