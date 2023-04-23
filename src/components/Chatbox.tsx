@@ -8,9 +8,9 @@ function Chatbox() {
   const maxLength = 10000;
 
   return (
-    <div className="flex flex-col w-full items-center justify-center bg-white py-4 px-4 gap-4 h-full">
+    <div className="flex flex-col w-full items-center justify-center bg-base-100 py-4 px-4 gap-4 h-full">
       <ConversationBox />
-      <div className="flex justify-start items-stretch gap-2 bg-secondary rounded-md p-2 h-fit w-full">
+      <div className="flex justify-start items-stretch gap-2 bg-base-200 rounded-md p-2 h-fit w-full">
         <div className="flex flex-col w-full">
           <textarea
             value={prompt}

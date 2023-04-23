@@ -10,11 +10,11 @@ function ChatHistory() {
       <h2 className="font-bold whitespace-nowrap self-start">
         Session History
       </h2>
-      <button className="btn btn-primary self-start w-full">
+      <button className="btn btn-primary self-start w-full btn-sm">
         + Add new session
       </button>
 
-      <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-4 overflow-y-scroll">
+      <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-4 overflow-y-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-100">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(
           (key) => (
             <ChatHistoryIndividual
