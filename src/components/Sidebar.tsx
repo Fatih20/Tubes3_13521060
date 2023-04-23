@@ -1,6 +1,8 @@
+import { useStringMatcherContext } from "@/contexts/StringMatcher";
 import { signOut } from "next-auth/react";
 
 function Sidebar() {
+  const { stringMatcher, setBM, setKMP } = useStringMatcherContext();
   return (
     <div className="flex flex-col items-center justify-start w-fit px-8 py-4">
       <h1 className="text-3xl font-bold text-center">Rinum</h1>
