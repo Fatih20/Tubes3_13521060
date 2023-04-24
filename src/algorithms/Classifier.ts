@@ -65,21 +65,25 @@ export function produceDate(question: string) {
 }
 
 export function produceMath(question: string) {
-  let p = question.match(higherMathExpr);
-  console.log(p);
-  if (p != null) {
-    let ret = evaluateMathExpression(p[0]);
-    console.log(ret);
-    return ret.toString();
+  //   let p = question.match(higherMathExpr);
+  //   console.log(p);
+  //   if (p != null) {
+  //     let ret = evaluateMathExpression(p[0]);
+  //     console.log(ret);
+  //     return ret.toString();
+  //   }
+  //   let q = question.match(MathExpr);
+  //   console.log(q);
+  //   if (q != null) {
+  //     let ret = evaluateMathExpression(q[0]);
+  //     console.log(ret);
+  //     return ret.toString();
+  //   }
+  try {
+    return evaluateMathExpression(question).toString();
+  } catch (e) {
+    return "Gagal mengevaluasi ekspresi";
   }
-  let q = question.match(MathExpr);
-  console.log(q);
-  if (q != null) {
-    let ret = evaluateMathExpression(q[0]);
-    console.log(ret);
-    return ret.toString();
-  }
-  return "Gagal mengevaluasi ekspresi";
 }
 
 export function produceAnswer(
