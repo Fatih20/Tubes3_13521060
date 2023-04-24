@@ -45,8 +45,8 @@ class DistanceAlgorithm{
             //for(let i = 0; i <= questionLength; i++){
             //    console.log(...array[i])
             //}
-            //console.log(array[questionLength][targetLength] + "/" + questionLength)
-            return array[questionLength][targetLength] / questionLength
+            console.log((Math.max(questionLength, targetLength) - array[questionLength][targetLength]) + "/" + Math.max(questionLength, targetLength))
+            return (Math.max(questionLength, targetLength) - array[questionLength][targetLength]) / Math.max(questionLength, targetLength)
         }
         
     }
@@ -56,4 +56,4 @@ export { DistanceAlgorithm }
 
 
 //let ds = new DistanceAlgorithm()
-//console.log(ds.getDistance("kitten", "sitting"))
+//console.log(ds.getDistance("kittennnnnnnnn", "kittennnnnnnn"))
