@@ -2,6 +2,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient } from "@prisma/client";
+import {
+  classifyQuestion,
+  produceDate,
+  produceMath,
+} from "@/algorithms/Classifier";
 
 const prisma = new PrismaClient();
 
@@ -70,7 +75,26 @@ export default async function handler(
   // If string matching method not given, default to BM
   const useKMP = stringMatchingAlgorithm === "KMP";
 
-  const answer = "OOP? More like POO.";
+  const questionClassification = classifyQuestion(question);
+
+  let answer = "";
+  switch (questionClassification) {
+    case "undefined":
+      answer = "Perintah tidak dikenali";
+      break;
+    case "math":
+      answer = produceMath(question);
+      break;
+    case "date":
+      answer = produceDate(question);
+      break;
+    case "add":
+      break;
+    case "remove":
+      break;
+    case "ask":
+      break;
+  }
 
   await prisma.chat.create({
     data: {
