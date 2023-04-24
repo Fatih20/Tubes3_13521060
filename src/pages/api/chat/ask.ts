@@ -23,6 +23,7 @@ export default async function handler(
   const body = JSON.parse(req.body) as {
     question?: string;
     chatSessionId?: string;
+    stringMatchingAlgorithm?: string;
   };
 
   const chatSessionId = body.chatSessionId;
@@ -63,6 +64,11 @@ export default async function handler(
       chatSessionId: chatSessionId,
     },
   });
+
+  const stringMatchingAlgorithm = body.stringMatchingAlgorithm;
+
+  // If string matching method not given, default to BM
+  const useKMP = stringMatchingAlgorithm === "KMP";
 
   const answer = "OOP? More like POO.";
 

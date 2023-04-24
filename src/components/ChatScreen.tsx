@@ -24,6 +24,7 @@ function ChatScreen() {
           body: JSON.stringify({
             chatSessionId: chatSession,
             question: question,
+            stringMatchingAlgorithm: stringMatcher,
           }),
         })
       ).json(),
