@@ -45,8 +45,9 @@ class DistanceAlgorithm{
             //for(let i = 0; i <= questionLength; i++){
             //    console.log(...array[i])
             //}
-            console.log((Math.max(questionLength, targetLength) - array[questionLength][targetLength]) + "/" + Math.max(questionLength, targetLength))
-            return (Math.max(questionLength, targetLength) - array[questionLength][targetLength]) / Math.max(questionLength, targetLength)
+            let param = Math.max(questionLength, targetLength)
+            console.log((param - array[questionLength][targetLength]) + "/" + param)
+            return (param - array[questionLength][targetLength]) / param
         }
         
     }
