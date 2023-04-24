@@ -3,3 +3,10 @@ export type ChatSession = {
   userId: string;
   title: string;
 };
+
+export type Chat = {
+  fromUser: boolean;
+  text: string;
+  textLength: number;
+  time: Date;
+};

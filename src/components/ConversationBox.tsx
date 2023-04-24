@@ -1,38 +1,22 @@
+import { useChatSessionContext } from "@/contexts/ChatSessionProvider";
+import { Chat } from "@/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useEffect } from "react";
+import LoadingCircle from "./LoadingCircle";
 
-function ConversationBox() {
+function ConversationBox({ chats }: { chats: Chat[] }) {
   const { data: session } = useSession();
+
   return (
-    <div className="flex-grow w-full flex flex-col items-start justify-start p-4 rounded-md gap-4 overflow-y-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-200">
-      {[
-        { text: "Bruh", profilePicture: undefined, user: false },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-        { text: "Bruh", profilePicture: session?.user?.image, user: true },
-      ].map(({ profilePicture, text, user }) => (
-        <Chat
+    <div className="flex-grow w-full flex flex-col items-start justify-start p-4 rounded-md gap-4 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-200">
+      {chats.map(({ fromUser, text, time }) => (
+        <ChatBit
           text={text}
-          user={user}
-          profilePicture={profilePicture}
+          fromUser={fromUser}
+          profilePicture={!fromUser ? undefined : session?.user?.image}
+          time={time}
           key={text}
         />
       ))}
@@ -40,47 +24,32 @@ function ConversationBox() {
   );
 }
 
-export type ChatProps = {
+export type ChatBitProps = {
   text: string;
   profilePicture: string | null | undefined;
-  user: boolean;
+  fromUser: boolean;
+  time: Date;
 };
 
-function Chat({ text, profilePicture, user }: ChatProps) {
+function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
   return (
-    <div className={`chat ${user ? "chat-end" : "chat-start"}`}>
+    <div className={`chat ${fromUser ? "chat-end" : "chat-start"}`}>
       <div className="chat-image avatar">
         <div className="w-12 rounded-full">
           <Image
             width={48}
             height={48}
-            src={user ? profilePicture ?? "/white.jpeg" : "/bot.jpeg"}
-            alt={user ? "You" : "Bot"}
+            src={fromUser ? profilePicture ?? "/white.jpeg" : "/bot.jpeg"}
+            alt={fromUser ? "You" : "Bot"}
             className="w-12 h-12 rounded-full"
           />{" "}
         </div>
       </div>
-      <div className="chat-bubble bg-primary">
-        It was said that you would, destroy the Sith, not join them.
-      </div>
+      <div className="chat-bubble bg-primary">{text}</div>
       <div className="chat-footer">
-        <time className="text-xs opacity-50">12:45</time>
+        <time className="text-xs opacity-50">{time.toISOString()}</time>
       </div>
     </div>
-    // <div
-    //   className={`flex w-full items-start justify-start gap-4 ${
-    //     user ? "flex-row-reverse" : "flex-row"
-    //   }`}
-    // >
-
-    //   <div
-    //     className={`p-3 flex-grow ${
-    //       user ? "bg-primary" : "bg-accent"
-    //     } rounded-xl`}
-    //   >
-    //     {text}
-    //   </div>
-    // </div>
   );
 }
 
