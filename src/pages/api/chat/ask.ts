@@ -4,6 +4,7 @@ import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient } from "@prisma/client";
 import {
   classifyQuestion,
+  produceAnswer,
   produceDate,
   produceMath,
 } from "@/algorithms/Classifier";
@@ -93,6 +94,10 @@ export default async function handler(
     case "remove":
       break;
     case "ask":
+      const savedQuestions = await prisma.savedQuestion.findMany({
+        where: { userId: { equals: session.user.id } },
+      });
+      answer = produceAnswer(question, useKMP, savedQuestions);
       break;
   }
 

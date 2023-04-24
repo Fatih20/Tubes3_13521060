@@ -1,5 +1,6 @@
 import { evaluateMathExpression } from "./Math";
 import { Main } from "./Main";
+import { SavedQuestion } from "@prisma/client";
 
 const questionType = [
   "ask",
@@ -81,11 +82,26 @@ export function produceMath(question: string) {
   return "Gagal mengevaluasi ekspresi";
 }
 
-export function produceAnswer(question: string, isKMP: boolean): string[] {
-  let main = new Main(["List of questions placeholder"]);
-  let KMPOn = true; // Get value from toggle
-  let ret: string[] = main.getMatchingQuestion(question, KMPOn);
-  return ret;
+export function produceAnswer(
+  question: string,
+  isKMP: boolean,
+  savedQuestion: SavedQuestion[]
+): string {
+  let main = new Main(savedQuestion);
+  const searchResult = main.getMatchingQuestion(question, isKMP);
+
+  // Exact atau 90% match ditemukan
+  if (searchResult.length <= 1) {
+    return searchResult[0].answer;
+  }
+
+  //   Ditemukan 3 pertanyaan paling mirip
+  const processedCandidate = searchResult
+    .map(({ question }, index) => {
+      return `${index + 1}. ${question}`;
+    })
+    .join("\n");
+  return `Pertanyaan tidak ditemukan di database.\n Apakah maksud anda : \n ${processedCandidate}`;
 }
 
 function convertToDay(num: number): string {
