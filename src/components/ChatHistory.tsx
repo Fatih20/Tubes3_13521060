@@ -30,6 +30,17 @@ function ChatHistory() {
     },
   });
   const maxLength = 100;
+  async function handleAddHistory() {
+    if (newSessionName.length > maxLength) {
+      return;
+    }
+
+    if (newSessionName.length <= 0) {
+      return;
+    }
+
+    await addNewHistory();
+  }
 
   return (
     <section
@@ -70,7 +81,7 @@ function ChatHistory() {
             </div>
 
             <button
-              onClick={() => addNewHistory()}
+              onClick={handleAddHistory}
               className="btn btn-primary self-start w-full btn-sm"
             >
               + Add new session
