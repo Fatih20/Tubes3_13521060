@@ -15,7 +15,7 @@ export function useStringMatcherContext() {
   return useContext(StringMatcherContext);
 }
 
-function StringMatcher({ children }: { children: ReactNode }) {
+function StringMatcherProvider({ children }: { children: ReactNode }) {
   const [stringMatcher, setStringMatcher] = useState(
     "KMP" as StringMatchingAlgorithm
   );
@@ -32,4 +32,4 @@ function StringMatcher({ children }: { children: ReactNode }) {
   );
 }
 
-export default StringMatcher;
+export default StringMatcherProvider;
