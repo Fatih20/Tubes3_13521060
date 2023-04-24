@@ -47,7 +47,6 @@ export default async function handler(
     orderBy: { time: "asc" },
     where: { chatSessionId: { equals: chatSessionId } },
   });
-  console.log(chatHistory);
 
   return res.status(200).json(chatHistory);
 }
