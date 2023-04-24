@@ -1,6 +1,7 @@
 import { useChatSessionContext } from "@/contexts/ChatSessionProvider";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { ChatSession } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 function ChatHistory() {
   const queryClient = useQueryClient();
@@ -14,6 +15,13 @@ function ChatHistory() {
     }
   }, [isLoading, data]);
   const { setChatSession } = useChatSessionContext();
+  const { mutateAsync: addNewHistory } = useMutation({
+    mutationFn: async () => await (await fetch("/api/addHistory")).json(),
+    onSuccess: (data) => {
+      // queryClient.setQueryData(["chatSession"], data);
+      queryClient.invalidateQueries(["chatSession"]);
+    },
+  });
 
   return (
     <section
@@ -37,15 +45,18 @@ function ChatHistory() {
         </div>
       ) : (
         <>
-          <button className="btn btn-primary self-start w-full btn-sm">
+          <button
+            onClick={() => addNewHistory()}
+            className="btn btn-primary self-start w-full btn-sm"
+          >
             + Add new session
           </button>
           <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-4 overflow-y-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-100">
-            {(data as string[]).map((chatSessionId) => (
+            {(data as ChatSession[]).map(({ id }) => (
               <ChatHistoryIndividual
-                key={chatSessionId}
-                title={chatSessionId}
-                onClick={() => setChatSession(chatSessionId)}
+                key={id}
+                title={id}
+                onClick={() => setChatSession(id)}
               />
             ))}
           </div>
