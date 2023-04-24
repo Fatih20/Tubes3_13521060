@@ -34,10 +34,12 @@ function ChatHistory() {
             method: "DELETE",
           })
         ).json(),
-      onSuccess: (data) => {
+      onSuccess: (data, id) => {
         // queryClient.setQueryData(["chatSession"], data);
         queryClient.invalidateQueries(["chatSession"]);
-        setChatSession("");
+        if (id === chatSession) {
+          setChatSession("");
+        }
       },
     });
   const maxLength = 100;
