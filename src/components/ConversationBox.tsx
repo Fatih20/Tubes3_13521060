@@ -3,11 +3,15 @@ import { Chat } from "@/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import LoadingCircle from "./LoadingCircle";
 
 function ConversationBox({ chats }: { chats: Chat[] }) {
   const { data: session } = useSession();
+  const messageEndRef = useRef(null);
+  useEffect(() => {
+    (messageEndRef.current as any)?.scrollIntoView({ behavior: "smooth" });
+  }, [chats]);
 
   return (
     <div className="flex-grow w-full flex flex-col items-start justify-start p-4 rounded-md gap-4 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-200">
@@ -20,6 +24,7 @@ function ConversationBox({ chats }: { chats: Chat[] }) {
           key={`${time} ${text}`}
         />
       ))}
+      <div className="opacity-0" ref={messageEndRef}></div>
     </div>
   );
 }
