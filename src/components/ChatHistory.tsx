@@ -31,6 +31,19 @@ function ChatHistory() {
         queryClient.invalidateQueries(["chatSession"]);
       },
     });
+  const { mutateAsync: deleteHistory, isLoading: deleteHistoryLoading } =
+    useMutation({
+      mutationFn: async (id: string) =>
+        await (
+          await fetch("/api/history/deleteHistory/" + id, {
+            method: "DELETE",
+          })
+        ).json(),
+      onSuccess: (data) => {
+        // queryClient.setQueryData(["chatSession"], data);
+        queryClient.invalidateQueries(["chatSession"]);
+      },
+    });
   const maxLength = 100;
   async function handleAddHistory() {
     if (newSessionName.length > maxLength) {
@@ -54,7 +67,7 @@ function ChatHistory() {
       <h2 className="font-bold whitespace-nowrap self-start">
         Session History
       </h2>
-      {isLoading || addHistoryLoading ? (
+      {isLoading || addHistoryLoading || deleteHistoryLoading ? (
         <div className="flex flex-col items-center justify-center flex-grow w-full">
           <LoadingCircle />
         </div>
@@ -89,6 +102,10 @@ function ChatHistory() {
                 key={`${id} ${title}`}
                 title={title}
                 onClick={() => setChatSession(id)}
+                onDelete={async () => {
+                  console.log(id);
+                  await deleteHistory(id);
+                }}
               />
             ))}
           </div>
@@ -101,18 +118,49 @@ function ChatHistory() {
 export type ChatHistoryIndividualProps = {
   title: string;
   onClick: () => void;
+  onDelete: () => Promise<void>;
 };
 
-function ChatHistoryIndividual({ onClick, title }: ChatHistoryIndividualProps) {
+function ChatHistoryIndividual({
+  onClick,
+  title,
+  onDelete,
+}: ChatHistoryIndividualProps) {
   return (
-    <button
-      className="btn btn-secondary font-normal normal-case w-full rounded-md p-2 hover:bg-neutral-focus btn-sm"
+    <div
+      className="btn btn-secondary font-normal normal-case w-full rounded-md p-2 hover:bg-neutral-focus btn-sm relative group"
       onClick={onClick}
     >
+      <div className="absolute z-10 right-0 h-full top-0 bottom-0 group-hover:flex hidden flex-row items-center justify-center bg-gradient-to-r from-transparent to-primary pl-12 pr-2">
+        <button
+          className=""
+          onClick={async (e) => {
+            e.stopPropagation();
+            await onDelete();
+          }}
+        >
+          <svg
+            className="aspect-square w-4 text-white"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            {" "}
+            <path stroke="none" d="M0 0h24v24H0z" />{" "}
+            <line x1="18" y1="6" x2="6" y2="18" />{" "}
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
       <h3 className="text-ellipsis whitespace-nowrap overflow-hidden">
         {title}
       </h3>
-    </button>
+    </div>
   );
 }
 
