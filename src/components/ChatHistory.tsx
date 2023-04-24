@@ -41,6 +41,7 @@ function ChatHistory() {
     }
 
     await addNewHistory();
+    setNewSessionName("");
   }
 
   return (
