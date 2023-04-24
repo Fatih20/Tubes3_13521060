@@ -1,6 +1,20 @@
-import React from "react";
+import { useChatSessionContext } from "@/contexts/ChatSessionProvider";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 
 function ChatHistory() {
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ["chatSession"],
+    queryFn: async () => await (await fetch("/api/getHistory")).json(),
+  });
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(data);
+    }
+  }, [isLoading, data]);
+  const { setChatSession } = useChatSessionContext();
+
   return (
     <section
       className="w-60 flex  flex-col gap-2 flex-grow items-start justify-start
@@ -10,21 +24,33 @@ function ChatHistory() {
       <h2 className="font-bold whitespace-nowrap self-start">
         Session History
       </h2>
-      <button className="btn btn-primary self-start w-full btn-sm">
-        + Add new session
-      </button>
-
-      <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-4 overflow-y-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-100">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(
-          (key) => (
-            <ChatHistoryIndividual
-              key={key}
-              title={key.toString()}
-              onClick={() => {}}
-            />
-          )
-        )}
-      </div>
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center flex-grow w-full">
+          <div
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
+          </div>
+        </div>
+      ) : (
+        <>
+          <button className="btn btn-primary self-start w-full btn-sm">
+            + Add new session
+          </button>
+          <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-4 overflow-y-scroll scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-100">
+            {(data as string[]).map((chatSessionId) => (
+              <ChatHistoryIndividual
+                key={chatSessionId}
+                title={chatSessionId}
+                onClick={() => setChatSession(chatSessionId)}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

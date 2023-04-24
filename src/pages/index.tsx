@@ -21,7 +21,7 @@ export default function Home() {
           {chatSession !== "" ? (
             <Chatbox />
           ) : (
-            <section className="flex flex-col flex-grow w-full items-center justify-center box-border p-6 gap-2">
+            <section className="flex flex-col flex-grow w-full items-center justify-center box-border p-6 gap-2 bg-base-100">
               <h2 className="text-3xl font-bold text-center">
                 You have not selected any chat session.
               </h2>
