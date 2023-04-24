@@ -11,12 +11,12 @@ export default async function handler(
 ) {
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 
   if (!session.user) {
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 

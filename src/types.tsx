@@ -8,5 +8,5 @@ export type Chat = {
   fromUser: boolean;
   text: string;
   textLength: number;
-  time: Date;
+  time: string;
 };

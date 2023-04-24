@@ -28,12 +28,16 @@ export type ChatBitProps = {
   text: string;
   profilePicture: string | null | undefined;
   fromUser: boolean;
-  time: Date;
+  time: string;
 };
 
 function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
   return (
-    <div className={`chat ${fromUser ? "chat-end" : "chat-start"}`}>
+    <div
+      className={`chat ${
+        fromUser ? "chat-end self-end" : "chat-start self-start"
+      }`}
+    >
       <div className="chat-image avatar">
         <div className="w-12 rounded-full">
           <Image
@@ -47,7 +51,7 @@ function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
       </div>
       <div className="chat-bubble bg-primary">{text}</div>
       <div className="chat-footer">
-        <time className="text-xs opacity-50">{time.toISOString()}</time>
+        <time className="text-xs opacity-50">{time}</time>
       </div>
     </div>
   );

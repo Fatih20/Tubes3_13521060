@@ -11,12 +11,12 @@ export default async function handler(
 ) {
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 
   if (!session.user) {
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 
@@ -29,7 +29,7 @@ export default async function handler(
 
   if (!chatSessionId) {
     res.statusMessage = "Chat session ID wasn't provided";
-    res.status(400);
+    res.status(400).send({});
     return;
   }
 
@@ -40,7 +40,7 @@ export default async function handler(
   } catch (e) {
     res.statusMessage =
       "The corresponding user does not have the provided chat session ID";
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 
@@ -48,7 +48,7 @@ export default async function handler(
 
   if (!question) {
     res.statusMessage = "Question wasn't provided";
-    res.status(400);
+    res.status(400).send({});
     return;
   }
 
@@ -64,6 +64,18 @@ export default async function handler(
     },
   });
 
-  res.status(200);
+  const answer = "OOP? More like POO.";
+
+  await prisma.chat.create({
+    data: {
+      fromUser: false,
+      text: answer,
+      textLength: answer.length,
+      time: new Date(),
+      chatSessionId: chatSessionId,
+    },
+  });
+
+  res.status(200).send({});
   return;
 }

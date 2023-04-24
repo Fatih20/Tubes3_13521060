@@ -25,7 +25,7 @@ export default async function handler(
 
   if (!chatSessionId) {
     res.statusMessage = "Chat session ID wasn't provided";
-    res.status(400);
+    res.status(400).send({});
     return;
   }
 
@@ -39,7 +39,7 @@ export default async function handler(
   } catch (e) {
     res.statusMessage =
       "The corresponding user does not have the provided chat session ID";
-    res.status(401);
+    res.status(401).send({});
     return;
   }
 
