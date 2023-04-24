@@ -11,11 +11,6 @@ function ChatHistory() {
     queryKey: ["chatSession"],
     queryFn: async () => await (await fetch("/api/history/getHistory")).json(),
   });
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(data);
-    }
-  }, [isLoading, data]);
   const { setChatSession } = useChatSessionContext();
   const { mutateAsync: addNewHistory, isLoading: addHistoryLoading } =
     useMutation({
@@ -102,10 +97,7 @@ function ChatHistory() {
                 key={`${id} ${title}`}
                 title={title}
                 onClick={() => setChatSession(id)}
-                onDelete={async () => {
-                  console.log(id);
-                  await deleteHistory(id);
-                }}
+                onDelete={async () => await deleteHistory(id)}
               />
             ))}
           </div>
