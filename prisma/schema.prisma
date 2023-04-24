@@ -60,6 +60,7 @@ model VerificationToken {
 model ChatSession {
   id     String @id @default(cuid())
   userId String
+  title  String @db.VarChar(100)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   Chat   Chat[]
 
@@ -70,7 +71,7 @@ model Chat {
   id            String      @id @default(cuid())
   chatSessionId String
   fromUser      Boolean
-  text          String
+  text          String      @db.LongText
   textLength    Int
   time          DateTime
   chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
@@ -81,9 +82,9 @@ model Chat {
 model SavedQuestion {
   id             String   @id @default(cuid())
   userId         String
-  question       String
+  question       String   @db.LongText
   questionLength Int
-  answer         String
+  answer         String   @db.LongText
   answerLength   Int
   time           DateTime
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
