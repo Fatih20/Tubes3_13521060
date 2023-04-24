@@ -20,11 +20,14 @@ export default async function handler(
     return;
   }
 
-  const body = req.body as { question?: string; chatSessionId?: string };
+  const body = JSON.parse(req.body) as {
+    question?: string;
+    chatSessionId?: string;
+  };
 
   const chatSessionId = body.chatSessionId;
 
-  if (!body.chatSessionId) {
+  if (!chatSessionId) {
     res.statusMessage = "Chat session ID wasn't provided";
     res.status(400);
     return;
@@ -51,9 +54,16 @@ export default async function handler(
 
   const questionLength = question.length;
 
-  const histories = await prisma.chatSession.findMany({
-    where: { userId: { equals: session.user.id } },
+  await prisma.chat.create({
+    data: {
+      fromUser: true,
+      text: question,
+      textLength: questionLength,
+      time: new Date(),
+      chatSessionId: chatSessionId,
+    },
   });
 
-  return res.status(200);
+  res.status(200);
+  return;
 }

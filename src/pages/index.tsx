@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import NotLoggedIn from "@/components/NotLoggedIn";
 import Sidebar from "@/components/Sidebar";
-import Chatbox from "@/components/Chatbox";
 import { useChatSessionContext } from "@/contexts/ChatSessionProvider";
+import ChatScreen from "@/components/ChatScreen";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +19,7 @@ export default function Home() {
         <div className="flex w-full items-stretch justify-start h-full flex-grow">
           <Sidebar />
           {chatSession !== "" ? (
-            <Chatbox />
+            <ChatScreen />
           ) : (
             <section className="flex flex-col flex-grow w-full items-center justify-center box-border p-6 gap-2 bg-base-100">
               <h2 className="text-3xl font-bold text-center">
