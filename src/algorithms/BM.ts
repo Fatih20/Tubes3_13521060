@@ -3,7 +3,7 @@ import { Algorithm } from './Algorithm';
 class BM extends Algorithm {
     
     //Hashtable to map characters to their last occurence in the pattern
-    array = new Array(128);
+    array: number[] = [];
 
     /**
      *
@@ -18,7 +18,9 @@ class BM extends Algorithm {
         let inc = target.length
         
         // fill hashmap array
-        this.array.fill(inc);
+        for (let i = 0; i < 128; i++) {
+            this.array[i] = inc;
+        }
         for (let i = 0; i <= idx; i++) {
             //console.log(target.charCodeAt(i))
             this.array[target.charCodeAt(i)] = idx - i;
@@ -33,7 +35,7 @@ class BM extends Algorithm {
             //letter matching
             while (j > -1){
                 //console.log("Matching: " + question.charAt(i) + " (index " + i + ")" + " and " + target.charAt(j))
-                if (question.charAt(i) == target.charAt(j)){
+                if (question[i] == target[j]){
                     i--;
                     j--;
                 }
