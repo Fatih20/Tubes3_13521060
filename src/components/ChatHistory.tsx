@@ -17,19 +17,20 @@ function ChatHistory() {
     }
   }, [isLoading, data]);
   const { setChatSession } = useChatSessionContext();
-  const { mutateAsync: addNewHistory } = useMutation({
-    mutationFn: async () =>
-      await (
-        await fetch("/api/history/addHistory", {
-          method: "POST",
-          body: JSON.stringify({ title: newSessionName }),
-        })
-      ).json(),
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["chatSession"], data);
-      queryClient.invalidateQueries(["chatSession"]);
-    },
-  });
+  const { mutateAsync: addNewHistory, isLoading: addHistoryLoading } =
+    useMutation({
+      mutationFn: async () =>
+        await (
+          await fetch("/api/history/addHistory", {
+            method: "POST",
+            body: JSON.stringify({ title: newSessionName }),
+          })
+        ).json(),
+      onSuccess: (data) => {
+        // queryClient.setQueryData(["chatSession"], data);
+        queryClient.invalidateQueries(["chatSession"]);
+      },
+    });
   const maxLength = 100;
   async function handleAddHistory() {
     if (newSessionName.length > maxLength) {
@@ -53,7 +54,7 @@ function ChatHistory() {
       <h2 className="font-bold whitespace-nowrap self-start">
         Session History
       </h2>
-      {isLoading ? (
+      {isLoading || addHistoryLoading ? (
         <div className="flex flex-col items-center justify-center flex-grow w-full">
           <LoadingCircle />
         </div>
