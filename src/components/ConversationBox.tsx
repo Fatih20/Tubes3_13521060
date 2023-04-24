@@ -48,26 +48,39 @@ export type ChatProps = {
 
 function Chat({ text, profilePicture, user }: ChatProps) {
   return (
-    <div
-      className={`flex w-full items-start justify-start gap-4 ${
-        user ? "flex-row-reverse" : "flex-row"
-      }`}
-    >
-      <Image
-        width={48}
-        height={48}
-        src={user ? profilePicture ?? "/white.jpeg" : "/bot.jpeg"}
-        alt={user ? "You" : "Bot"}
-        className="w-12 h-12 rounded-full"
-      />
-      <div
-        className={`p-3 flex-grow ${
-          user ? "bg-primary" : "bg-accent"
-        } rounded-xl`}
-      >
-        {text}
+    <div className={`chat ${user ? "chat-end" : "chat-start"}`}>
+      <div className="chat-image avatar">
+        <div className="w-12 rounded-full">
+          <Image
+            width={48}
+            height={48}
+            src={user ? profilePicture ?? "/white.jpeg" : "/bot.jpeg"}
+            alt={user ? "You" : "Bot"}
+            className="w-12 h-12 rounded-full"
+          />{" "}
+        </div>
+      </div>
+      <div className="chat-bubble bg-primary">
+        It was said that you would, destroy the Sith, not join them.
+      </div>
+      <div className="chat-footer">
+        <time className="text-xs opacity-50">12:45</time>
       </div>
     </div>
+    // <div
+    //   className={`flex w-full items-start justify-start gap-4 ${
+    //     user ? "flex-row-reverse" : "flex-row"
+    //   }`}
+    // >
+
+    //   <div
+    //     className={`p-3 flex-grow ${
+    //       user ? "bg-primary" : "bg-accent"
+    //     } rounded-xl`}
+    //   >
+    //     {text}
+    //   </div>
+    // </div>
   );
 }
 
