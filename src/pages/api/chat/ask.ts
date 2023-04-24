@@ -78,6 +78,7 @@ export default async function handler(
 
   const questionClassification = classifyQuestion(question);
 
+  // .All logic for producing answers are here
   let answer = "";
   switch (questionClassification) {
     case "undefined":
@@ -89,15 +90,15 @@ export default async function handler(
     case "date":
       answer = produceDate(question);
       break;
-    case "add":
-      break;
-    case "remove":
-      break;
     case "ask":
       const savedQuestions = await prisma.savedQuestion.findMany({
         where: { userId: { equals: session.user.id } },
       });
       answer = produceAnswer(question, useKMP, savedQuestions);
+      break;
+    case "add":
+      break;
+    case "remove":
       break;
   }
 
