@@ -17,7 +17,7 @@ function ConversationBox({ chats }: { chats: Chat[] }) {
           fromUser={fromUser}
           profilePicture={!fromUser ? undefined : session?.user?.image}
           time={time}
-          key={text}
+          key={`${time} ${text}`}
         />
       ))}
     </div>
@@ -32,6 +32,7 @@ export type ChatBitProps = {
 };
 
 function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
+  const date = new Date(time);
   return (
     <div
       className={`chat ${
@@ -51,7 +52,7 @@ function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
       </div>
       <div className="chat-bubble bg-primary">{text}</div>
       <div className="chat-footer">
-        <time className="text-xs opacity-50">{time}</time>
+        <time className="text-xs opacity-50">{`${date.getMinutes()}:${date.getHours()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</time>
       </div>
     </div>
   );
