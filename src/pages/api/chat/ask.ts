@@ -4,6 +4,8 @@ import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient } from "@prisma/client";
 import {
   classifyQuestion,
+  getAddedQuestion,
+  getRemovedQuestion,
   produceAnswer,
   produceDate,
   produceMath,
@@ -97,8 +99,61 @@ export default async function handler(
       answer = produceAnswer(question, useKMP, savedQuestions);
       break;
     case "add":
+      const [addedQuestion, addedAnswer] = getAddedQuestion(question);
+      console.log(addedQuestion);
+      let questionExist = true;
+      try {
+        await prisma.savedQuestion.findFirstOrThrow({
+          where: {
+            question: { equals: addedQuestion },
+            userId: { equals: session.user.id },
+          },
+        });
+      } catch (e) {
+        questionExist = false;
+      }
+      answer = questionExist
+        ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
+        : `Pertanyaan ${addedQuestion} telah ditambah`;
+
+      if (questionExist) {
+        await prisma.savedQuestion.updateMany({
+          where: {
+            question: { equals: addedQuestion },
+            userId: { equals: session.user.id },
+          },
+          data: {
+            answer: addedAnswer,
+            answerLength: addedAnswer.length,
+            time: new Date(),
+            userId: session.user.id,
+          },
+        });
+      } else {
+        await prisma.savedQuestion.create({
+          data: {
+            answer: addedAnswer,
+            answerLength: addedAnswer.length,
+            question: addedQuestion,
+            questionLength: addedQuestion.length,
+            time: new Date(),
+            userId: session.user.id,
+          },
+        });
+      }
       break;
     case "remove":
+      const removedQuestion = getRemovedQuestion(question);
+      const deleted = await prisma.savedQuestion.deleteMany({
+        where: {
+          question: { equals: removedQuestion },
+          userId: { equals: session.user.id },
+        },
+      });
+      answer =
+        deleted.count > 0
+          ? `Pertanyaan ${removedQuestion} telah dihapus`
+          : `Tidak ada pertanyaan ${removedQuestion} di database`;
       break;
   }
 

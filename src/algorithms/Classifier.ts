@@ -17,23 +17,25 @@ const MathExpr =
   /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/;
 const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/;
 const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/;
-const addQuestionPattern = /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
-const rmQuestionPattern = /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+const addQuestionPattern =
+  /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi;
+const rmQuestionPattern =
+  /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
 
-function getAddedQuestion(addString: string): string[] {
+export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
   //F.S. return array of string, first element is the question, second element is the answer
-  addQuestionPattern.lastIndex = 0
-  let question = addQuestionPattern.exec(addString)
-  return [question![2], question![4]]
+  addQuestionPattern.lastIndex = 0;
+  let question = addQuestionPattern.exec(addString);
+  return [question![2], question![4]];
 }
 
-function getRemovedQuestion(addString: string): String {
+export function getRemovedQuestion(addString: string): string {
   //I.S. string has been validated to be match the rmQuestionPattern regular expression
   //F.S. return string of the question to be removed
-  rmQuestionPattern.lastIndex = 0
-  let question = rmQuestionPattern.exec(addString)
-  return question![2]
+  rmQuestionPattern.lastIndex = 0;
+  let question = rmQuestionPattern.exec(addString);
+  return question![2];
 }
 
 // First classification can get undefined, if classified but invalid, there will be a handling routine
@@ -98,38 +100,16 @@ export function produceDate(question: string) {
  * @returns String answer to the question
  */
 export function produceMath(question: string) {
-  //   let p = question.match(higherMathExpr);
-  //   console.log(p);
-  //   if (p != null) {
-  //     let ret = evaluateMathExpression(p[0]);
-  //     console.log(ret);
-  //     return ret.toString();
-  //   }
-  //   let q = question.match(MathExpr);
-  //   console.log(q);
-  //   if (q != null) {
-  //     let ret = evaluateMathExpression(q[0]);
-  //     console.log(ret);
-  //     return ret.toString();
-  //   }
-  // try {
-  //   return evaluateMathExpression(question).toString();
-  // } catch (e) {
-  //   return "Gagal mengevaluasi ekspresi";
-  // }
   try {
-    let ret = evaluateMathExpression(question)
+    let ret = evaluateMathExpression(question);
     if (isNaN(ret)) {
-      return "Ketik ekspresi matematika nya yang bener dong"
+      return "Ketik ekspresi matematika nya yang bener dong";
     } else {
-      return "Udah aku itungin nih, hasilnya "+ret.toString()
+      return "Udah aku itungin nih, hasilnya " + ret.toString();
     }
   } catch (e) {
     return "Ketik ekspresi matematika nya yang bener dong";
   }
-
-
-
 }
 
 // Routine to get the answer based on the classification of the question
