@@ -49,7 +49,7 @@ function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
           <Image
             width={48}
             height={48}
-            src={fromUser ? profilePicture ?? "/white.jpeg" : "/bot.jpeg"}
+            src={fromUser ? profilePicture ?? "/white.jpg" : "/simsimi.jpeg"}
             alt={fromUser ? "You" : "Bot"}
             className="w-12 h-12 rounded-full"
           />{" "}

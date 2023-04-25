@@ -36,6 +36,7 @@ function ChatBox({ sendQuestion, loading }: ChatBoxProps) {
       </div>
       <div className="flex flex-col w-full">
         <textarea
+          placeholder="Write a question for SimSimi Kyun Kyun <3"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           className="w-full textarea bg-transparent resize-none border-0 outline-0 focus:outline-none shadow-none h-28"

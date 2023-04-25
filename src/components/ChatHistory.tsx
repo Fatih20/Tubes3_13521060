@@ -74,6 +74,7 @@ function ChatHistory() {
           <div className="flex flex-col w-full items-start justify-center gap-2">
             <div className="flex flex-col items-start justify-center  w-full">
               <textarea
+                placeholder="Title of new chat session"
                 value={newSessionName}
                 onChange={(e) => setNewSessionName(e.target.value)}
                 className="w-full textarea bg-base-100 resize-none border-0 outline-0 focus:outline-none shadow-none"
@@ -94,6 +95,9 @@ function ChatHistory() {
               + Add new session
             </button>
           </div>
+          {(data as ChatSession[]).length > 0 && (
+            <div className="divider m-0"></div>
+          )}
           <div className="flex w-full flex-col flex-grow h-full items-center justify-start gap-2 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-100">
             {(data as ChatSession[]).map(({ id, title }) => (
               <ChatHistoryIndividual

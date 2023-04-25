@@ -5,15 +5,18 @@ import NotLoggedIn from "@/components/NotLoggedIn";
 import Sidebar from "@/components/Sidebar";
 import { useChatSessionContext } from "@/contexts/ChatSessionProvider";
 import ChatScreen from "@/components/ChatScreen";
+import LoadingCircle from "@/components/LoadingCircle";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { chatSession } = useChatSessionContext();
   return (
     <main className="flex h-screen flex-col items-center justify-center">
-      {!session ? (
+      {status === "loading" ? (
+        <LoadingCircle />
+      ) : !session ? (
         <NotLoggedIn />
       ) : (
         <div className="flex w-full items-stretch justify-start h-full flex-grow">
