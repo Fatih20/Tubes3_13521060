@@ -37,7 +37,12 @@ function getRemovedQuestion(addString: string): String {
 }
 
 // First classification can get undefined, if classified but invalid, there will be a handling routine
-
+// Routine to classify the questions given
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns QuestionClassification enumeration
+ */
 export const classifyQuestion = (question: string): QuestionClassification => {
   if (DateExpr.test(question)) {
     return "date";
@@ -59,6 +64,12 @@ export const classifyQuestion = (question: string): QuestionClassification => {
   return "undefined";
 };
 
+// Routine to handle date output
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns String answer to the question
+ */
 export function produceDate(question: string) {
   let date: RegExpMatchArray | null = question.match(DateExpr);
   // console.log(date)
@@ -77,9 +88,15 @@ export function produceDate(question: string) {
     // console.log(ret);
     return day + ", " + date + " " + month + ", " + year;
   }
-  return "Gagal mengevaluasi tanggal";
+  return "Yah gak tau itu tanggal apa :(";
 }
 
+// Routine to handle math expression input
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns String answer to the question
+ */
 export function produceMath(question: string) {
   //   let p = question.match(higherMathExpr);
   //   console.log(p);
@@ -95,13 +112,34 @@ export function produceMath(question: string) {
   //     console.log(ret);
   //     return ret.toString();
   //   }
+  // try {
+  //   return evaluateMathExpression(question).toString();
+  // } catch (e) {
+  //   return "Gagal mengevaluasi ekspresi";
+  // }
   try {
-    return evaluateMathExpression(question).toString();
+    let ret = evaluateMathExpression(question)
+    if (isNaN(ret)) {
+      return "Ketik ekspresi matematika nya yang bener dong"
+    } else {
+      return "Udah aku itungin nih, hasilnya "+ret.toString()
+    }
   } catch (e) {
-    return "Gagal mengevaluasi ekspresi";
+    return "Ketik ekspresi matematika nya yang bener dong";
   }
+
+
+
 }
 
+// Routine to get the answer based on the classification of the question
+/**
+ *
+ * @param question : the given question from the user input
+ * @param isKMP : Flag to determine whether the algorithm is KMP or BM
+ * @param savedQuestion : array of question from the database
+ * @returns String answer to the question
+ */
 export function produceAnswer(
   question: string,
   isKMP: boolean,
@@ -121,9 +159,15 @@ export function produceAnswer(
       return `${index + 1}. ${question}`;
     })
     .join("\n");
-  return `Pertanyaan tidak ditemukan di database.\n Apakah maksud anda : \n ${processedCandidate}`;
+  return `Aku tidak menemukan pertanyaan kamu di database.\n Apa maksud kamu : \n ${processedCandidate}`;
 }
 
+// Converter enumeration to day
+/**
+ *
+ * @param num : enumeration number of the day
+ * @returns String of the day
+ */
 function convertToDay(num: number): string {
   switch (num) {
     case 0:
@@ -145,6 +189,12 @@ function convertToDay(num: number): string {
   }
 }
 
+// Converter enumeration to month
+/**
+ *
+ * @param num : enumeration value of the month
+ * @returns String of the month
+ */
 function convertToMonth(num: number): string {
   switch (num) {
     case 0:

@@ -1,11 +1,18 @@
 
+// Evaluate mathematical expression
+/**
+ *
+ * @param expression : mathematical expression
+ * @returns Result number of the expression evaluated
+ */
 function evaluateMathExpression(expression: string): number {
-    const regexPattern = /[-+*/()]|\d+\.?\d*|\.\d*|\d*\.\d+|\d+\(\d+\)/g;
-
-    const tokens = expression.match(regexPattern);
-    if (!tokens) {
-      throw new Error(`Invalid math expression: ${expression}`);
-    }
+  const regexPattern = /[-+*/()]|\d+\.?\d*|\.\d*|\d*\.\d+|\d+\(\d+\)/g;
+  const allChar = /\S/g
+  const tokens = expression.match(regexPattern);
+  const allChars = expression.match(allChar);
+  if (!tokens || tokens.length != allChars.length) {
+    throw new Error(`Invalid math expression: ${expression}`);
+  }
 
     const operandStack: number[] = [];
     const operatorStack: string[] = [];
