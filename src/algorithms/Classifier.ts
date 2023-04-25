@@ -17,8 +17,24 @@ const MathExpr =
   /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/gi;
 const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/gi;
 const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/;
-const addQuestionPattern = /^/gi;
-const rmQuestionPattern = /^/gi;
+const addQuestionPattern = /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
+const rmQuestionPattern = /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+
+function getAddedQuestion(addString: string): string[] {
+  //I.S. string has been validated to be match the addQuestionPattern regular expression
+  //F.S. return array of string, first element is the question, second element is the answer
+  addQuestionPattern.lastIndex = 0
+  let question = addQuestionPattern.exec(addString)
+  return [question![2], question![4]]
+}
+
+function getRemovedQuestion(addString: string): String {
+  //I.S. string has been validated to be match the rmQuestionPattern regular expression
+  //F.S. return string of the question to be removed
+  rmQuestionPattern.lastIndex = 0
+  let question = rmQuestionPattern.exec(addString)
+  return question![2]
+}
 
 // First classification can get undefined, if classified but invalid, there will be a handling routine
 
