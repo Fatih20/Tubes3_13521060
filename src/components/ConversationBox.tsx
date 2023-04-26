@@ -57,7 +57,16 @@ function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
       </div>
       <div className="chat-bubble min-w-fit bg-primary">{text}</div>
       <div className="chat-footer">
-        <time className="text-xs opacity-50">{`${date.getMinutes()}:${date.getHours()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</time>
+        <time className="text-xs opacity-50">{`${date
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${date
+          .getMinutes()
+          .toString()
+          .padStart(
+            2,
+            "0"
+          )} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</time>
       </div>
     </div>
   );
