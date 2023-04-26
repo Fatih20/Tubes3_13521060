@@ -12,15 +12,15 @@ const questionType = [
 ] as const;
 type QuestionClassification = (typeof questionType)[number];
 
-const QuestionPattern = /^/gi;
+const QuestionPattern = /^/i;
 const MathExpr =
-  /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/;
-const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/;
-const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/;
+  /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/i;
+const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
+const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
 const addQuestionPattern =
-  /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi;
+  /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/i;
 const rmQuestionPattern =
-  /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
+  /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/i;
 
 export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
