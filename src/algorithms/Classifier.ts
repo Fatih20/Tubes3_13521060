@@ -8,6 +8,7 @@ const questionType = [
   "date",
   "remove",
   "add",
+  "addPersonal",
   "undefined",
 ] as const;
 type QuestionClassification = (typeof questionType)[number];
@@ -18,6 +19,7 @@ const MathExpr =
 const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/gi;
 const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/;
 const addQuestionPattern = /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
+const addPQuestionPattern = /^(masukkan[ ]+pertanyaan|tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
 const rmQuestionPattern = /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
 
 function getAddedQuestion(addString: string): string[] {
@@ -25,6 +27,15 @@ function getAddedQuestion(addString: string): string[] {
   //F.S. return array of string, first element is the question, second element is the answer
   addQuestionPattern.lastIndex = 0
   let question = addQuestionPattern.exec(addString)
+  return [question![2], question![4]]
+}
+
+function getAddedQuestionP(addString: string): string[] {
+  //basically the personal type from getAddedQuestion
+  //I.S. string has been validated to be match the addPQuestionPattern regular expression
+  //F.S. return array of string, first element is the question, second element is the answer
+  addPQuestionPattern.lastIndex = 0
+  let question = addPQuestionPattern.exec(addString)
   return [question![2], question![4]]
 }
 
@@ -48,6 +59,9 @@ export const classifyQuestion = (question: string): QuestionClassification => {
   }
   if (addQuestionPattern.test(question)) {
     return "add";
+  }
+  if (addPQuestionPattern.test(question)) {
+    return "addPersonal";
   }
   if (rmQuestionPattern.test(question)) {
     return "remove";
