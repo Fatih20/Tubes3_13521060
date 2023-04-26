@@ -33,7 +33,7 @@ export function getAddedQuestion(addString: string): string[] {
   return [question![2], question![4]];
 }
 
-function getAddedQuestionP(addString: string): string[] {
+export function getAddedQuestionP(addString: string): string[] {
   //basically the personal type from getAddedQuestion
   //I.S. string has been validated to be match the addPQuestionPattern regular expression
   //F.S. return array of string, first element is the question, second element is the answer
