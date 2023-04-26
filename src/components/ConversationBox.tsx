@@ -63,10 +63,9 @@ function ChatBit({ text, profilePicture, fromUser, time }: ChatBitProps) {
           .padStart(2, "0")}:${date
           .getMinutes()
           .toString()
-          .padStart(
-            2,
-            "0"
-          )} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</time>
+          .padStart(2, "0")} ${date.getDate()}/${
+          date.getMonth() + 1
+        }/${date.getFullYear()}`}</time>
       </div>
     </div>
   );
