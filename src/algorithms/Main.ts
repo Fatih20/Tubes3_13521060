@@ -52,11 +52,8 @@ class Main {
     if (elmt !== undefined && elmt[0] > 0.9) {
       return [elmt[1]];
     } else if (elmt !== undefined) {
-      if (this.ListQuestion.length < 3) {
-        return [
-          "XXX",
-          elmt[1]
-          ]
+      if (Questions.queue.length < 2) {
+        return [elmt[1], "XXX"]
       }
       return [
         elmt[1],
