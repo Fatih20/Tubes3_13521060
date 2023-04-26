@@ -88,7 +88,7 @@ export function produceDate(question: string) {
     let month = convertToMonth(retdate.getMonth());
     let year = retdate.getFullYear();
     // console.log(ret);
-    return day + ", " + date + " " + month + ", " + year;
+    return "Hari sama tanggalnya itu "+day + ", " + date + " " + month + ", " + year;
   }
   return "Yah gak tau itu tanggal apa :(";
 }
@@ -136,7 +136,7 @@ export function produceAnswer(
   //   Ditemukan 3 pertanyaan paling mirip
   const processedCandidate = searchResult
     .map(({ question }, index) => {
-      return `${index + 1}. ${question}`;
+      return `\n${index + 1}. ${question}`;
     })
     .join("\n");
   return `Aku tidak menemukan pertanyaan kamu di database.\n Apa maksud kamu : \n ${processedCandidate}`;
