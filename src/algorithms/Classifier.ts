@@ -154,7 +154,7 @@ export function produceAnswer(
 
   //   Pertanyaan didalam database masih kurang dari 3
   if (searchResult.length < 3) {
-    return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nyuk tambahin \nAtau yang kamu cari: \n${searchResult[0].answer}`;
+    return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nYuk tambahin! \nMungkin yang kamu cari: \n${searchResult[0].answer}`;
   }
   //   Ditemukan 3 pertanyaan paling mirip
   const processedCandidate = searchResult
