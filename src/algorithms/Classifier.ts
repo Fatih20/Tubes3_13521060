@@ -7,6 +7,7 @@ const questionType = [
   "math",
   "date",
   "remove",
+  "removePersonal",
   "add",
   "addPersonal",
   "undefined",
@@ -19,18 +20,20 @@ const MathExpr =
 const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
 const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
 const addQuestionPattern =
-/^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
+/^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
 const addPQuestionPattern =
-/^(masukkan[ ]+pertanyaan|tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
+/^((masukkan|tambah(kan)?)[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
 const rmQuestionPattern =
-/^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+/^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+const rmPQuestionPattern =
+/^(hapus(kan)?[ ]+pertanyaan[ ]+personal)[ ]+([^\s]+.*)/gi
 
 export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
   //F.S. return array of string, first element is the question, second element is the answer
   addQuestionPattern.lastIndex = 0;
   let question = addQuestionPattern.exec(addString);
-  return [question![2], question![4]];
+  return [question![3], question![5]];
 }
 
 export function getAddedQuestionP(addString: string): string[] {
@@ -39,7 +42,8 @@ export function getAddedQuestionP(addString: string): string[] {
   //F.S. return array of string, first element is the question, second element is the answer
   addPQuestionPattern.lastIndex = 0
   let question = addPQuestionPattern.exec(addString)
-  return [question![2], question![4]]
+  console.log(question)
+  return [question![4], question![6]]
 }
 
 export function getRemovedQuestion(addString: string): string {
@@ -47,7 +51,15 @@ export function getRemovedQuestion(addString: string): string {
   //F.S. return string of the question to be removed
   rmQuestionPattern.lastIndex = 0;
   let question = rmQuestionPattern.exec(addString);
-  return question![2];
+  return question![3];
+}
+
+export function getRemovedQuestionP(addString: string): string {
+  //I.S. string has been validated to be match the rmQuestionPattern regular expression
+  //F.S. return string of the question to be removed
+  rmPQuestionPattern.lastIndex = 0;
+  let question = rmPQuestionPattern.exec(addString);
+  return question![3];
 }
 
 // First classification can get undefined, if classified but invalid, there will be a handling routine
@@ -73,6 +85,9 @@ export const classifyQuestion = (question: string): QuestionClassification => {
   }
   if (rmQuestionPattern.test(question)) {
     return "remove";
+  }
+  if (rmPQuestionPattern.test(question)) {
+    return "removePersonal";
   }
   if (QuestionPattern.test(question)) {
     return "ask";
