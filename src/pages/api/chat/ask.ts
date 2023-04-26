@@ -53,7 +53,7 @@ export default async function handler(
     return;
   }
 
-  const question = body.question;
+  const question = body.question?.toLowerCase();
 
   if (!question) {
     res.statusMessage = "Question wasn't provided";
@@ -100,7 +100,6 @@ export default async function handler(
       break;
     case "add":
       const [addedQuestion, addedAnswer] = getAddedQuestion(question);
-      console.log(addedQuestion);
       let questionExist = true;
       try {
         await prisma.savedQuestion.findFirstOrThrow({
