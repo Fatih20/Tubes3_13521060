@@ -128,8 +128,12 @@ export function produceAnswer(
   let main = new Main(savedQuestion);
   const searchResult = main.getMatchingQuestion(question, isKMP);
 
+  // If no question was found
+  if (searchResult.length == 0) {
+    return "Belum ada pertanyaan nih kak, tambahin pertanyaan ke aku yuk"
+  }
   // Exact atau 90% match ditemukan
-  if (searchResult.length <= 1) {
+  if (searchResult.length == 1) {
     return searchResult[0].answer;
   }
 
