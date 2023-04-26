@@ -25,7 +25,7 @@ class Main {
     // Return the first matching question if KMP/BM return true
     let Questions: PrioQueue = new PrioQueue();
 
-    this.ListQuestion.forEach((element) => {
+    for (const element of this.ListQuestion) {
       let exactMatchExist = flag
         ? this.KMPAlgorithm.check(substring, element.question)
         : this.BMAlgorithm.check(substring, element.question);
@@ -39,7 +39,12 @@ class Main {
         );
         Questions.enqueue(matchPercent, element);
       }
-    });
+    }
+
+    // this.ListQuestion.forEach((element) => {
+    //   console.log("Pertanyaan di database", element.question);
+    // });
+
 
     // Get first element, if > 90% then return
 
@@ -47,6 +52,12 @@ class Main {
     if (elmt !== undefined && elmt[0] > 0.9) {
       return [elmt[1]];
     } else if (elmt !== undefined) {
+      if (this.ListQuestion.length < 3) {
+        return [
+          "XXX",
+          elmt[1]
+          ]
+      }
       return [
         elmt[1],
         Questions.queue[0][1] ?? "",

@@ -13,21 +13,24 @@ const questionType = [
 ] as const;
 type QuestionClassification = (typeof questionType)[number];
 
-const QuestionPattern = /^/gi;
+const QuestionPattern = /^/i;
 const MathExpr =
-  /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/gi;
-const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/gi;
-const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/;
-const addQuestionPattern = /^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
-const addPQuestionPattern = /^(masukkan[ ]+pertanyaan|tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
-const rmQuestionPattern = /^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+  /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/i;
+const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
+const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
+const addQuestionPattern =
+/^(tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
+const addPQuestionPattern =
+/^(masukkan[ ]+pertanyaan|tambahkan[ ]+pertanyaan|tambah[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
+const rmQuestionPattern =
+/^(hapuskan[ ]+pertanyaan|hapus[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
 
-function getAddedQuestion(addString: string): string[] {
+export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
   //F.S. return array of string, first element is the question, second element is the answer
-  addQuestionPattern.lastIndex = 0
-  let question = addQuestionPattern.exec(addString)
-  return [question![2], question![4]]
+  addQuestionPattern.lastIndex = 0;
+  let question = addQuestionPattern.exec(addString);
+  return [question![2], question![4]];
 }
 
 function getAddedQuestionP(addString: string): string[] {
@@ -39,16 +42,21 @@ function getAddedQuestionP(addString: string): string[] {
   return [question![2], question![4]]
 }
 
-function getRemovedQuestion(addString: string): String {
+export function getRemovedQuestion(addString: string): string {
   //I.S. string has been validated to be match the rmQuestionPattern regular expression
   //F.S. return string of the question to be removed
-  rmQuestionPattern.lastIndex = 0
-  let question = rmQuestionPattern.exec(addString)
-  return question![2]
+  rmQuestionPattern.lastIndex = 0;
+  let question = rmQuestionPattern.exec(addString);
+  return question![2];
 }
 
 // First classification can get undefined, if classified but invalid, there will be a handling routine
-
+// Routine to classify the questions given
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns QuestionClassification enumeration
+ */
 export const classifyQuestion = (question: string): QuestionClassification => {
   if (DateExpr.test(question)) {
     return "date";
@@ -73,6 +81,12 @@ export const classifyQuestion = (question: string): QuestionClassification => {
   return "undefined";
 };
 
+// Routine to handle date output
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns String answer to the question
+ */
 export function produceDate(question: string) {
   let date: RegExpMatchArray | null = question.match(DateExpr);
   // console.log(date)
@@ -89,33 +103,38 @@ export function produceDate(question: string) {
     let month = convertToMonth(retdate.getMonth());
     let year = retdate.getFullYear();
     // console.log(ret);
-    return day + ", " + date + " " + month + ", " + year;
+    return "Hari sama tanggalnya itu "+day + ", " + date + " " + month + ", " + year;
   }
-  return "Gagal mengevaluasi tanggal";
+  return "Yah gak tau itu tanggal apa :(";
 }
 
+// Routine to handle math expression input
+/**
+ *
+ * @param question : the given question from the user input
+ * @returns String answer to the question
+ */
 export function produceMath(question: string) {
-  //   let p = question.match(higherMathExpr);
-  //   console.log(p);
-  //   if (p != null) {
-  //     let ret = evaluateMathExpression(p[0]);
-  //     console.log(ret);
-  //     return ret.toString();
-  //   }
-  //   let q = question.match(MathExpr);
-  //   console.log(q);
-  //   if (q != null) {
-  //     let ret = evaluateMathExpression(q[0]);
-  //     console.log(ret);
-  //     return ret.toString();
-  //   }
   try {
-    return evaluateMathExpression(question).toString();
+    let ret = evaluateMathExpression(question);
+    if (isNaN(ret)) {
+      return "Ketik ekspresi matematika nya yang bener dong";
+    } else {
+      return "Udah aku itungin nih, hasilnya " + ret.toString();
+    }
   } catch (e) {
-    return "Gagal mengevaluasi ekspresi";
+    return "Ketik ekspresi matematika nya yang bener dong";
   }
 }
 
+// Routine to get the answer based on the classification of the question
+/**
+ *
+ * @param question : the given question from the user input
+ * @param isKMP : Flag to determine whether the algorithm is KMP or BM
+ * @param savedQuestion : array of question from the database
+ * @returns String answer to the question
+ */
 export function produceAnswer(
   question: string,
   isKMP: boolean,
@@ -124,20 +143,34 @@ export function produceAnswer(
   let main = new Main(savedQuestion);
   const searchResult = main.getMatchingQuestion(question, isKMP);
 
+  // If no question was found
+  if (searchResult.length == 0) {
+    return "Belum ada pertanyaan nih kak, tambahin pertanyaan ke aku yuk"
+  }
   // Exact atau 90% match ditemukan
-  if (searchResult.length <= 1) {
+  if (searchResult.length == 1) {
     return searchResult[0].answer;
   }
 
+  //   Pertanyaan didalam database masih kurang dari 3
+  if (searchResult.length < 3) {
+    return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nyuk tambahin \nAtau yang kamu cari: \n${searchResult[0].answer}`
+  }
   //   Ditemukan 3 pertanyaan paling mirip
   const processedCandidate = searchResult
     .map(({ question }, index) => {
-      return `${index + 1}. ${question}`;
+      return `\n${index + 1}. ${question}`;
     })
     .join("\n");
-  return `Pertanyaan tidak ditemukan di database.\n Apakah maksud anda : \n ${processedCandidate}`;
+  return `Aku tidak menemukan pertanyaan kamu di database.\n Apa maksud kamu : \n ${processedCandidate}`;
 }
 
+// Converter enumeration to day
+/**
+ *
+ * @param num : enumeration number of the day
+ * @returns String of the day
+ */
 function convertToDay(num: number): string {
   switch (num) {
     case 0:
@@ -159,6 +192,12 @@ function convertToDay(num: number): string {
   }
 }
 
+// Converter enumeration to month
+/**
+ *
+ * @param num : enumeration value of the month
+ * @returns String of the month
+ */
 function convertToMonth(num: number): string {
   switch (num) {
     case 0:
