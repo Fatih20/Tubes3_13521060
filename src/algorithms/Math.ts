@@ -5,8 +5,8 @@
  * @returns Result number of the expression evaluated
  */
 function evaluateMathExpression(expression: string): number {
-  const regexPattern = /[-+*/()]|\d+\.?\d*|\.\d*|\d*\.\d+|\d+\(\d+\)/g;
-  const allChar = /\S/g;
+  const regexPattern = /(?<!\d)-\d+\.?\d*(?!\d)|\d+\.?\d*|[-+*/()]|\.\d*|\d*\.\d+/g;
+  const allChar = /(?<!\d)-\d+\.?\d*(?!\d)|\d+\.?\d*|\.\d*|\S/g;
   const tokens = expression.match(regexPattern);
   const allChars = expression.match(allChar);
   if (!tokens || tokens.length !== allChars?.length) {
