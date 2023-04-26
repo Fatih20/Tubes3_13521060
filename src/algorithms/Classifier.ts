@@ -138,7 +138,7 @@ export function produceAnswer(
   }
 
   //   Pertanyaan didalam database masih kurang dari 3
-  if (searchResult[0] == "XXX") {
+  if (searchResult[0].answer == "XXX") {
     return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nyuk tambahin \nAtau yang kamu cari: \n${searchResult[0].answer}`
   }
   //   Ditemukan 3 pertanyaan paling mirip
