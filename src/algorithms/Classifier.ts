@@ -130,7 +130,7 @@ export function produceAnswer(
 
   // If no question was found
   if (searchResult.length == 0) {
-    return "Belum ada pertanyaan nih kak, tambahin pertanyaan ke aku yuk"
+    return "Belum ada pertanyaan nih kak, tambahin pertanyaan ke aku yuk";
   }
   // Exact atau 90% match ditemukan
   if (searchResult.length == 1) {
@@ -139,7 +139,7 @@ export function produceAnswer(
 
   //   Pertanyaan didalam database masih kurang dari 3
   if (searchResult.length < 3) {
-    return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nyuk tambahin \nAtau yang kamu cari: \n${searchResult[0].answer}`
+    return `Pertanyaan yang aku simpan masih kurang dari 3 :( \nyuk tambahin \nAtau yang kamu cari: \n${searchResult[0].answer}`;
   }
   //   Ditemukan 3 pertanyaan paling mirip
   const processedCandidate = searchResult

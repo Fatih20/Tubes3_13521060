@@ -53,7 +53,7 @@ class Main {
       return [elmt[1]];
     } else if (elmt !== undefined) {
       if (Questions.queue.length < 2) {
-        return [elmt[1]]
+        return [elmt[1], "XXX"]
       }
       return [
         elmt[1],
