@@ -91,3 +91,10 @@ model SavedQuestion {
 
   @@index([userId])
 }
+
+model SavedQuestionGlobal {
+  id       String   @id @default(cuid())
+  question String   @db.LongText
+  answer   String   @db.LongText
+  time     DateTime
+}
