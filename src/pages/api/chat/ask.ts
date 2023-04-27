@@ -5,7 +5,9 @@ import { PrismaClient } from "@prisma/client";
 import {
   classifyQuestion,
   getAddedQuestion,
+  getAddedQuestionP,
   getRemovedQuestion,
+  getRemovedQuestionP,
   produceAnswer,
   produceDate,
   produceMath,
@@ -73,16 +75,12 @@ export default async function handler(
     },
   });
 
-  const stringMatchingAlgorithm = body.stringMatchingAlgorithm;
-
   // If string matching method not given, default to BM
-  const useKMP = stringMatchingAlgorithm === "KMP";
+  const useKMP = body.stringMatchingAlgorithm === "KMP";
 
-  const questionClassification = classifyQuestion(question);
-
-  // .All logic for producing answers are here
+  // All logic for producing answers are here
   let answer = "";
-  switch (questionClassification) {
+  switch (classifyQuestion(question)) {
     case "undefined":
       answer = "Perintah tidak dikenali";
       break;
@@ -112,31 +110,25 @@ export default async function handler(
         questionExist = false;
       }
       answer = questionExist
-        ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
-        : `Pertanyaan ${addedQuestion} telah ditambah`;
+        ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban personal di-update ke ${addedAnswer}`
+        : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban personal-nya.`;
 
       if (questionExist) {
-        await prisma.savedQuestion.updateMany({
+        await prisma.savedQuestionGlobal.updateMany({
           where: {
             question: { equals: addedQuestion },
-            userId: { equals: session.user.id },
           },
           data: {
             answer: addedAnswer,
-            answerLength: addedAnswer.length,
             time: new Date(),
-            userId: session.user.id,
           },
         });
       } else {
-        await prisma.savedQuestion.create({
+        await prisma.savedQuestionGlobal.create({
           data: {
             answer: addedAnswer,
-            answerLength: addedAnswer.length,
             question: addedQuestion,
-            questionLength: addedQuestion.length,
             time: new Date(),
-            userId: session.user.id,
           },
         });
       }
@@ -152,7 +144,63 @@ export default async function handler(
       answer =
         deleted.count > 0
           ? `Pertanyaan ${removedQuestion} telah dihapus`
-          : `Tidak ada pertanyaan ${removedQuestion} di database`;
+          : `Tidak ada pertanyaan ${removedQuestion} di database!`;
+      break;
+    case "addPersonal":
+      const [addedQuestionP, addedAnswerP] = getAddedQuestionP(question);
+      let questionPExist = true;
+      try {
+        await prisma.savedQuestion.findFirstOrThrow({
+          where: {
+            question: { equals: addedQuestionP },
+            userId: { equals: session.user.id },
+          },
+        });
+      } catch (e) {
+        questionPExist = false;
+      }
+      answer = questionPExist
+        ? `Pertanyaan ${addedQuestionP} sudah ada! Jawaban personal di-update ke ${addedAnswerP}`
+        : `Pertanyaan ${addedQuestionP} telah ditambah dengan jawaban personal-nya.`;
+
+      if (questionPExist) {
+        await prisma.savedQuestion.updateMany({
+          where: {
+            question: { equals: addedQuestionP },
+            userId: { equals: session.user.id },
+          },
+          data: {
+            answer: addedAnswerP,
+            answerLength: addedAnswerP.length,
+            time: new Date(),
+            userId: session.user.id,
+          },
+        });
+      } else {
+        await prisma.savedQuestion.create({
+          data: {
+            answer: addedAnswerP,
+            answerLength: addedAnswerP.length,
+            question: addedQuestionP,
+            questionLength: addedQuestionP.length,
+            time: new Date(),
+            userId: session.user.id,
+          },
+        });
+      }
+      break;
+    case "removePersonal":
+      const removedQuestionP = getRemovedQuestionP(question);
+      const deletedP = await prisma.savedQuestion.deleteMany({
+        where: {
+          question: { equals: removedQuestionP },
+          userId: { equals: session.user.id },
+        },
+      });
+      answer =
+        deletedP.count > 0
+          ? `Pertanyaan ${removedQuestionP} telah dihapus jawaban personal-nya`
+          : `Tidak ada pertanyaan ${removedQuestionP} dengan jawaban personal di database!`;
       break;
   }
 
