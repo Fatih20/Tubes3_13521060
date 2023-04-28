@@ -69,31 +69,32 @@ export function getRemovedQuestionP(addString: string): string {
  * @param question : the given question from the user input
  * @returns QuestionClassification enumeration
  */
-export const classifyQuestion = (question: string): QuestionClassification => {
+export const classifyQuestion = (question: string): QuestionClassification[] => {
+  let ret = [];
   if (DateExpr.test(question)) {
-    return "date";
+    ret.push("date");
   }
 
   if (higherMathExpr.test(question) || MathExpr.test(question)) {
-    return "math";
+    ret.push("math");
   }
   if (addQuestionPattern.test(question)) {
-    return "add";
+    ret.push("add");
   }
   if (addPQuestionPattern.test(question)) {
-    return "addPersonal";
+    ret.push("addPersonal");
   }
   if (rmQuestionPattern.test(question)) {
-    return "remove";
+    ret.push("remove");
   }
   if (rmPQuestionPattern.test(question)) {
-    return "removePersonal";
+    ret.push("removePersonal");
   }
   if (QuestionPattern.test(question)) {
-    return "ask";
+    ret.push("ask");
   }
 
-  return "undefined";
+  if (ret.length == 0) { return ["undefined"]; }
 };
 
 // Routine to handle date output
