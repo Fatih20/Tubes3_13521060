@@ -38,15 +38,15 @@ model Session {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  email         String          @unique
+  id            String        @id @default(cuid())
+  email         String        @unique
   emailVerified DateTime?
   image         String?
   name          String?
   accounts      Account[]
   sessions      Session[]
   ChatSession   ChatSession[]
-  SavedQuestion SavedQuestion[]
+  // SavedQuestion SavedQuestion[]
 }
 
 model VerificationToken {
@@ -79,20 +79,20 @@ model Chat {
   @@index([chatSessionId])
 }
 
+// model SavedQuestion {
+//   id             String   @id @default(cuid())
+//   userId         String
+//   question       String   @db.LongText
+//   questionLength Int
+//   answer         String   @db.LongText
+//   answerLength   Int
+//   time           DateTime
+//   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@index([userId])
+// }
+
 model SavedQuestion {
-  id             String   @id @default(cuid())
-  userId         String
-  question       String   @db.LongText
-  questionLength Int
-  answer         String   @db.LongText
-  answerLength   Int
-  time           DateTime
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
-model SavedQuestionGlobal {
   id       String   @id @default(cuid())
   question String   @db.LongText
   answer   String   @db.LongText

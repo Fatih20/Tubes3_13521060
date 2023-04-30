@@ -7,9 +7,7 @@ const questionType = [
   "math",
   "date",
   "remove",
-  "removePersonal",
   "add",
-  "addPersonal",
   "undefined",
 ] as const;
 type QuestionClassification = (typeof questionType)[number];
@@ -76,12 +74,12 @@ export const classifyQuestion = (question: string): QuestionClassification => {
   if (higherMathExpr.test(question) || MathExpr.test(question)) {
     return "math";
   }
-  if (addPQuestionPattern.test(question)) {
-    return "addPersonal";
-  }
-  if (rmPQuestionPattern.test(question)) {
-    return "removePersonal";
-  }
+  // if (addPQuestionPattern.test(question)) {
+  //   return "addPersonal";
+  // }
+  // if (rmPQuestionPattern.test(question)) {
+  //   return "removePersonal";
+  // }
   if (addQuestionPattern.test(question)) {
     return "add";
   }
