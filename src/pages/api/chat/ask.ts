@@ -84,20 +84,20 @@ export default async function handler(
   for (const classification of classifications) {
     switch (classification) {
       case "undefined": {
-        answer = "Perintah tidak dikenali";
+        answer += "Perintah tidak dikenali";
         break;
       }
       case "math": {
-        answer = produceMath(question);
+        answer += produceMath(question);
         break;
       }
       case "date": {
-        answer = produceDate(question);
+        answer += produceDate(question);
         break;
       }
       case "ask": {
         const savedQuestions = await prisma.savedQuestion.findMany({});
-        answer = produceAnswer(question, useKMP, savedQuestions);
+        answer += produceAnswer(question, useKMP, savedQuestions);
         break;
       }
       case "add": {
@@ -109,7 +109,7 @@ export default async function handler(
         // Question yang match, ambil id-nya terus taruh di variabel ini
         // const questionID
 
-        answer = questionExist
+        answer += questionExist
           ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
           : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${
               /*Jawaban taruh sini*/ ""
@@ -148,9 +148,9 @@ export default async function handler(
               // id : deletedQuestionId
             },
           });
-          answer = `Pertanyaan ${removedQuestion} telah dihapus`;
+          answer += `Pertanyaan ${removedQuestion} telah dihapus`;
         } else {
-          answer = `Tidak ada pertanyaan ${removedQuestion} di database!`;
+          answer += `Tidak ada pertanyaan ${removedQuestion} di database!`;
         }
       }
     }
