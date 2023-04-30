@@ -5,13 +5,12 @@ import { PrismaClient } from "@prisma/client";
 import {
   classifyQuestion,
   getAddedQuestion,
-  getAddedQuestionP,
   getRemovedQuestion,
-  getRemovedQuestionP,
   produceAnswer,
   produceDate,
   produceMath,
 } from "@/algorithms/Classifier";
+import { Main } from "@/algorithms/Main";
 
 const prisma = new PrismaClient();
 
@@ -105,10 +104,18 @@ export default async function handler(
         let questionExist = true;
         const savedQuestions = await prisma.savedQuestion.findMany({});
         // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
-
+        
         // Question yang match, ambil id-nya terus taruh di variabel ini
-        // const questionID
-
+        let questionID;
+        const search = new Main(savedQuestions);
+        const data = search.getMatchingQuestion(addedQuestion, useKMP, true);
+        if (data.length == 0){
+          questionExist = false;
+        }
+        else{
+          questionID = data[0].id;
+        }
+        
         answer += questionExist
           ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
           : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${
@@ -118,7 +125,7 @@ export default async function handler(
         if (questionExist) {
           await prisma.savedQuestion.update({
             where: {
-              // id : questionID
+              id : questionID
             },
             data: {
               answer: addedAnswer,
@@ -138,9 +145,20 @@ export default async function handler(
       }
       case "remove": {
         const removedQuestion = getRemovedQuestion(question);
-        const questionExist = true;
+        let questionExist = true;
+        const savedQuestions = await prisma.savedQuestion.findMany({});
+
         // Cari pertanyaan yang sama eksak, set questionExist sesuai hasilnya. Kalau ketemu yang eksak simpan id-nya ke variabel di bawah.
         // const deletedQuestionId
+        let questionID;
+        const search = new Main(savedQuestions);
+        const data = search.getMatchingQuestion(removedQuestion, useKMP, true);
+        if (data.length == 0){
+          questionExist = false;
+        }
+        else{
+          questionID = data[0].id;
+        }
 
         if (questionExist) {
           const deleted = await prisma.savedQuestion.delete({

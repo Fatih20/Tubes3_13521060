@@ -69,12 +69,12 @@ export function getRemovedQuestionP(addString: string): string {
 export const classifyQuestion = (
   question: string
 ): QuestionClassification[] => {
-  let ret = [];
+  let ret : QuestionClassification[] = [] ;
   if (DateExpr.test(question)) {
     ret.push("date");
   }
 
-  if (higherMathExpr.test(question) || MathExpr.test(question)) {
+  else if (higherMathExpr.test(question) || MathExpr.test(question)) {
     ret.push("math");
   }
   // if (addPQuestionPattern.test(question)) {
@@ -83,26 +83,26 @@ export const classifyQuestion = (
   // if (rmPQuestionPattern.test(question)) {
   //   return "removePersonal";
   // }
-  if (addQuestionPattern.test(question)) {
+  else if (addQuestionPattern.test(question)) {
     ret.push("add");
   }
-  if (addPQuestionPattern.test(question)) {
-    ret.push("addPersonal");
-  }
-  if (rmQuestionPattern.test(question)) {
+  //if (addPQuestionPattern.test(question)) {
+  //  ret.push("addPersonal");
+  //}
+  else if (rmQuestionPattern.test(question)) {
     ret.push("remove");
   }
-  if (rmPQuestionPattern.test(question)) {
-    ret.push("removePersonal");
-  }
-  if (QuestionPattern.test(question)) {
+  //if (rmPQuestionPattern.test(question)) {
+  //  ret.push("removePersonal");
+  //}
+  else if (QuestionPattern.test(question)) {
     ret.push("ask");
   }
 
   if (ret.length == 0) {
     return ["undefined"];
   }
-  return ["undefined"];
+  return ret;
 };
 
 // Routine to handle date output
@@ -174,7 +174,7 @@ export function produceAnswer(
   savedQuestion: SavedQuestion[]
 ): string {
   let main = new Main(savedQuestion);
-  const searchResult = main.getMatchingQuestion(question, isKMP);
+  const searchResult = main.getMatchingQuestion(question, isKMP, false);
 
   // If no question was found
   if (searchResult.length == 0) {
