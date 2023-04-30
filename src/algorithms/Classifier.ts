@@ -7,9 +7,7 @@ const questionType = [
   "math",
   "date",
   "remove",
-  "removePersonal",
   "add",
-  "addPersonal",
   "undefined",
 ] as const;
 type QuestionClassification = (typeof questionType)[number];
@@ -20,13 +18,12 @@ const MathExpr =
 const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
 const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
 const addQuestionPattern =
-/^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi
+  /^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi;
 const addPQuestionPattern =
-/^((masukkan|tambah(kan)?)[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi
-const rmQuestionPattern =
-/^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi
+  /^((masukkan|tambah(kan)?)[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi;
+const rmQuestionPattern = /^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
 const rmPQuestionPattern =
-/^(hapus(kan)?[ ]+pertanyaan[ ]+personal)[ ]+([^\s]+.*)/gi
+  /^(hapus(kan)?[ ]+pertanyaan[ ]+personal)[ ]+([^\s]+.*)/gi;
 
 export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
@@ -40,10 +37,10 @@ export function getAddedQuestionP(addString: string): string[] {
   //basically the personal type from getAddedQuestion
   //I.S. string has been validated to be match the addPQuestionPattern regular expression
   //F.S. return array of string, first element is the question, second element is the answer
-  addPQuestionPattern.lastIndex = 0
-  let question = addPQuestionPattern.exec(addString)
-  console.log(question)
-  return [question![4], question![6]]
+  addPQuestionPattern.lastIndex = 0;
+  let question = addPQuestionPattern.exec(addString);
+  console.log(question);
+  return [question![4], question![6]];
 }
 
 export function getRemovedQuestion(addString: string): string {
@@ -69,7 +66,9 @@ export function getRemovedQuestionP(addString: string): string {
  * @param question : the given question from the user input
  * @returns QuestionClassification enumeration
  */
-export const classifyQuestion = (question: string): QuestionClassification[] => {
+export const classifyQuestion = (
+  question: string
+): QuestionClassification[] => {
   let ret = [];
   if (DateExpr.test(question)) {
     ret.push("date");
@@ -78,6 +77,12 @@ export const classifyQuestion = (question: string): QuestionClassification[] => 
   if (higherMathExpr.test(question) || MathExpr.test(question)) {
     ret.push("math");
   }
+  // if (addPQuestionPattern.test(question)) {
+  //   return "addPersonal";
+  // }
+  // if (rmPQuestionPattern.test(question)) {
+  //   return "removePersonal";
+  // }
   if (addQuestionPattern.test(question)) {
     ret.push("add");
   }
@@ -94,7 +99,10 @@ export const classifyQuestion = (question: string): QuestionClassification[] => 
     ret.push("ask");
   }
 
-  if (ret.length == 0) { return ["undefined"]; }
+  if (ret.length == 0) {
+    return ["undefined"];
+  }
+  return ["undefined"];
 };
 
 // Routine to handle date output
@@ -119,7 +127,16 @@ export function produceDate(question: string) {
     let month = convertToMonth(retdate.getMonth());
     let year = retdate.getFullYear();
     // console.log(ret);
-    return "Hari sama tanggalnya itu "+day + ", " + date + " " + month + ", " + year;
+    return (
+      "Hari sama tanggalnya itu " +
+      day +
+      ", " +
+      date +
+      " " +
+      month +
+      ", " +
+      year
+    );
   }
   return "Yah gak tau itu tanggal apa :(";
 }
