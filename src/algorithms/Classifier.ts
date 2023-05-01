@@ -74,7 +74,7 @@ export const classifyQuestion = (
     ret.push("date");
   }
 
-  else if (higherMathExpr.test(question) || MathExpr.test(question)) {
+  if (higherMathExpr.test(question) || MathExpr.test(question)) {
     ret.push("math");
   }
   // if (addPQuestionPattern.test(question)) {
@@ -83,19 +83,19 @@ export const classifyQuestion = (
   // if (rmPQuestionPattern.test(question)) {
   //   return "removePersonal";
   // }
-  else if (addQuestionPattern.test(question)) {
+  if (addQuestionPattern.test(question)) {
     ret.push("add");
   }
   //if (addPQuestionPattern.test(question)) {
   //  ret.push("addPersonal");
   //}
-  else if (rmQuestionPattern.test(question)) {
+  if (rmQuestionPattern.test(question)) {
     ret.push("remove");
   }
   //if (rmPQuestionPattern.test(question)) {
   //  ret.push("removePersonal");
   //}
-  else if (QuestionPattern.test(question)) {
+  if (QuestionPattern.test(question)) {
     ret.push("ask");
   }
 
