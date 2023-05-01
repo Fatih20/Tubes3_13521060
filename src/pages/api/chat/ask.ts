@@ -88,20 +88,20 @@ export default async function handler(
         break;
       }
       case "math": {
-        answer += produceMath(question);
+        answer += produceMath(query);
         break;
       }
       case "date": {
-        answer += produceDate(question);
+        answer += produceDate(query);
         break;
       }
       case "ask": {
         const savedQuestions = await prisma.savedQuestion.findMany({});
-        answer += produceAnswer(question, useKMP, savedQuestions);
+        answer += produceAnswer(query, useKMP, savedQuestions);
         break;
       }
       case "add": {
-        const [addedQuestion, addedAnswer] = getAddedQuestion(question);
+        const [addedQuestion, addedAnswer] = getAddedQuestion(query);
         const savedQuestions = await prisma.savedQuestion.findMany({});
         // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
 
@@ -116,9 +116,7 @@ export default async function handler(
         const questionExist = questionID !== undefined;
         answer += questionExist
           ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
-          : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${
-              /*Jawaban taruh sini*/ ""
-            }.`;
+          : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${addedAnswer}.`;
 
         if (questionExist) {
           await prisma.savedQuestion.update({
@@ -142,7 +140,7 @@ export default async function handler(
         break;
       }
       case "remove": {
-        const removedQuestion = getRemovedQuestion(question);
+        const removedQuestion = getRemovedQuestion(query);
         const savedQuestions = await prisma.savedQuestion.findMany({});
 
         // Cari pertanyaan yang sama eksak, set questionExist sesuai hasilnya. Kalau ketemu yang eksak simpan id-nya ke variabel di bawah.
