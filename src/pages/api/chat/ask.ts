@@ -76,11 +76,12 @@ export default async function handler(
 
   // If string matching method not given, default to BM
   const useKMP = body.stringMatchingAlgorithm === "KMP";
+  const queries = question.split("\n");
 
   // All logic for producing answers are here
-  const classifications = classifyQuestion(question);
   let answer = "";
-  for (const classification of classifications) {
+  for (const query of queries) {
+    const classification = classifyQuestion(query);
     switch (classification) {
       case "undefined": {
         answer += "Perintah tidak dikenali";
@@ -101,21 +102,18 @@ export default async function handler(
       }
       case "add": {
         const [addedQuestion, addedAnswer] = getAddedQuestion(question);
-        let questionExist = true;
         const savedQuestions = await prisma.savedQuestion.findMany({});
         // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
-        
+
         // Question yang match, ambil id-nya terus taruh di variabel ini
-        let questionID;
+        let questionID: string | undefined;
         const search = new Main(savedQuestions);
         const data = search.getMatchingQuestion(addedQuestion, useKMP, true);
-        if (data.length == 0){
-          questionExist = false;
-        }
-        else{
+        if (data.length > 0) {
           questionID = data[0].id;
         }
-        
+
+        const questionExist = questionID !== undefined;
         answer += questionExist
           ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
           : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${
@@ -125,7 +123,7 @@ export default async function handler(
         if (questionExist) {
           await prisma.savedQuestion.update({
             where: {
-              id : questionID
+              id: questionID,
             },
             data: {
               answer: addedAnswer,
@@ -145,25 +143,22 @@ export default async function handler(
       }
       case "remove": {
         const removedQuestion = getRemovedQuestion(question);
-        let questionExist = true;
         const savedQuestions = await prisma.savedQuestion.findMany({});
 
         // Cari pertanyaan yang sama eksak, set questionExist sesuai hasilnya. Kalau ketemu yang eksak simpan id-nya ke variabel di bawah.
         // const deletedQuestionId
-        let questionID;
+        let questionID: string | undefined;
         const search = new Main(savedQuestions);
         const data = search.getMatchingQuestion(removedQuestion, useKMP, true);
-        if (data.length == 0){
-          questionExist = false;
-        }
-        else{
+        if (data.length > 0) {
           questionID = data[0].id;
         }
 
+        const questionExist = questionID !== undefined;
         if (questionExist) {
-          const deleted = await prisma.savedQuestion.delete({
+          await prisma.savedQuestion.delete({
             where: {
-              // id : deletedQuestionId
+              id: questionID,
             },
           });
           answer += `Pertanyaan ${removedQuestion} telah dihapus`;
@@ -172,7 +167,7 @@ export default async function handler(
         }
       }
     }
-    answer += "\n";
+    answer += "\n---\n";
   }
 
   await prisma.chat.create({
