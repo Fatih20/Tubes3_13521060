@@ -11,22 +11,21 @@
     - [Website](#website)
   - [Libraries Used](#libraries-used)
 
-
 ## Project Description
 
-This project is a web-based ChatBot project, inspired by the trending AI ChatBot, ChatGPT (but is not GPT-based),  created using the nextJS and prisma framework and implements the KMP and BM string matching algorithm to match the message input with the stored question-answer in the database, made as a project for the Algorithm and Strategies course Bandung Institute of Technology. Made by Fatih N.R.I (13521060), Kenneth Ezekiel (13521089), Muhammad Aji W. (13521095).
+This project is a web-based ChatBot project, inspired by the trending AI ChatBot, ChatGPT (but is not GPT-based), created using the nextJS and prisma framework and implements the KMP and BM string matching algorithm to match the message input with the stored question-answer in the database, made as a project for the Algorithm and Strategies course Bandung Institute of Technology. Made by Fatih N.R.I (13521060), Kenneth Ezekiel (13521089), Muhammad Aji W. (13521095).
 
 ## Program Features
 
 Our program features:
 
-* Calculator for mathematical expression
-* Date Calendar
-* Asking questions
-* Adding questions-answers to the database
-* Removing questions from the database
-* Account Login
-* Chat Sessions
+- Calculator for mathematical expression
+- Date Calendar
+- Asking questions
+- Adding questions-answers to the database
+- Removing questions from the database
+- Account Login
+- Chat Sessions
 
 ## Algorithm Description
 
@@ -58,7 +57,6 @@ The algorithm works as follows:
 
 The bad character rule works by looking at the last occurrence of the mismatched character in the pattern and shifting the pattern to align with that occurrence. The good suffix rule works by looking for a suffix of the pattern that matches a prefix of the mismatched substring, and shifting the pattern to align with that suffix. If no suffix of the pattern matches a prefix of the mismatched substring, the algorithm shifts the pattern by the length of the pattern.
 
-
 ## Running the Program
 
 ### Local
@@ -75,4 +73,9 @@ The bad character rule works by looking at the last occurrence of the mismatched
 
 ## Libraries Used
 
-* NextAuth
+- [NextAuth](https://next-auth.js.org/)
+- [Prisma](https://www.prisma.io/)
+- [Next](https://nextjs.org/)
+- [Tanstack Query](https://tanstack.com/query/latest)
+- [daisyUI](https://daisyui.com/)
+- [tailwind](https://tailwindcss.com/)
