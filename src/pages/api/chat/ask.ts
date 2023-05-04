@@ -10,6 +10,7 @@ import {
   produceDate,
   produceMath,
 } from "@/algorithms/Classifier";
+import { Main } from "@/algorithms/Main";
 
 const prisma = new PrismaClient();
 
@@ -73,87 +74,98 @@ export default async function handler(
     },
   });
 
-  const stringMatchingAlgorithm = body.stringMatchingAlgorithm;
-
   // If string matching method not given, default to BM
-  const useKMP = stringMatchingAlgorithm === "KMP";
+  const useKMP = body.stringMatchingAlgorithm === "KMP";
+  const queries = question.split("\n");
 
-  const questionClassification = classifyQuestion(question);
-
-  // .All logic for producing answers are here
+  // All logic for producing answers are here
   let answer = "";
-  switch (questionClassification) {
-    case "undefined":
-      answer = "Perintah tidak dikenali";
-      break;
-    case "math":
-      answer = produceMath(question);
-      break;
-    case "date":
-      answer = produceDate(question);
-      break;
-    case "ask":
-      const savedQuestions = await prisma.savedQuestion.findMany({
-        where: { userId: { equals: session.user.id } },
-      });
-      answer = produceAnswer(question, useKMP, savedQuestions);
-      break;
-    case "add":
-      const [addedQuestion, addedAnswer] = getAddedQuestion(question);
-      let questionExist = true;
-      try {
-        await prisma.savedQuestion.findFirstOrThrow({
-          where: {
-            question: { equals: addedQuestion },
-            userId: { equals: session.user.id },
-          },
-        });
-      } catch (e) {
-        questionExist = false;
+  for (const query of queries) {
+    const classification = classifyQuestion(query);
+    switch (classification) {
+      case "undefined": {
+        answer += "Perintah tidak dikenali";
+        break;
       }
-      answer = questionExist
-        ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
-        : `Pertanyaan ${addedQuestion} telah ditambah`;
+      case "math": {
+        answer += produceMath(query);
+        break;
+      }
+      case "date": {
+        answer += produceDate(query);
+        break;
+      }
+      case "ask": {
+        const savedQuestions = await prisma.savedQuestion.findMany({});
+        answer += produceAnswer(query, useKMP, savedQuestions);
+        break;
+      }
+      case "add": {
+        const [addedQuestion, addedAnswer] = getAddedQuestion(query);
+        const savedQuestions = await prisma.savedQuestion.findMany({});
+        // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
 
-      if (questionExist) {
-        await prisma.savedQuestion.updateMany({
-          where: {
-            question: { equals: addedQuestion },
-            userId: { equals: session.user.id },
-          },
-          data: {
-            answer: addedAnswer,
-            answerLength: addedAnswer.length,
-            time: new Date(),
-            userId: session.user.id,
-          },
-        });
-      } else {
-        await prisma.savedQuestion.create({
-          data: {
-            answer: addedAnswer,
-            answerLength: addedAnswer.length,
-            question: addedQuestion,
-            questionLength: addedQuestion.length,
-            time: new Date(),
-            userId: session.user.id,
-          },
-        });
+        // Question yang match, ambil id-nya terus taruh di variabel ini
+        let questionID: string | undefined;
+        const search = new Main(savedQuestions);
+        const data = search.getMatchingQuestion(addedQuestion, useKMP, true);
+        if (data.length > 0) {
+          questionID = data[0].id;
+        }
+
+        const questionExist = questionID !== undefined;
+        answer += questionExist
+          ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
+          : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${addedAnswer}.`;
+
+        if (questionExist) {
+          await prisma.savedQuestion.update({
+            where: {
+              id: questionID,
+            },
+            data: {
+              answer: addedAnswer,
+              time: new Date(),
+            },
+          });
+        } else {
+          await prisma.savedQuestion.create({
+            data: {
+              answer: addedAnswer,
+              question: addedQuestion,
+              time: new Date(),
+            },
+          });
+        }
+        break;
       }
-      break;
-    case "remove":
-      const removedQuestion = getRemovedQuestion(question);
-      const deleted = await prisma.savedQuestion.deleteMany({
-        where: {
-          question: { equals: removedQuestion },
-          userId: { equals: session.user.id },
-        },
-      });
-      answer =
-        deleted.count > 0
-          ? `Pertanyaan ${removedQuestion} telah dihapus`
-          : `Tidak ada pertanyaan ${removedQuestion} di database`;
-      break;
+      case "remove": {
+        const removedQuestion = getRemovedQuestion(query);
+        const savedQuestions = await prisma.savedQuestion.findMany({});
+
+        // Cari pertanyaan yang sama eksak, set questionExist sesuai hasilnya. Kalau ketemu yang eksak simpan id-nya ke variabel di bawah.
+        // const deletedQuestionId
+        let questionID: string | undefined;
+        const search = new Main(savedQuestions);
+        const data = search.getMatchingQuestion(removedQuestion, useKMP, true);
+        if (data.length > 0) {
+          questionID = data[0].id;
+        }
+
+        const questionExist = questionID !== undefined;
+        if (questionExist) {
+          await prisma.savedQuestion.delete({
+            where: {
+              id: questionID,
+            },
+          });
+          answer += `Pertanyaan ${removedQuestion} telah dihapus`;
+        } else {
+          answer += `Tidak ada pertanyaan ${removedQuestion} di database!`;
+        }
+      }
+    }
+    answer += "\n---\n";
   }
 
   await prisma.chat.create({
