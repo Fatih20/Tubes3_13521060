@@ -13,7 +13,7 @@ class PrioQueue {
       return;
     }
     for (let i = 0; i < this.queue.length; i++) {
-      if (this.queue[i][0] > prio) {
+      if (this.queue[i][0] < prio) {
         this.queue.splice(i, 0, [prio, element]);
         return;
       } else if (i == this.queue.length - 1) {
