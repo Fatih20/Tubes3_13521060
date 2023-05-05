@@ -3,12 +3,16 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { PrismaClient } from "@prisma/client";
 import {
+  DateExpr,
+  MathExpr,
   classifyQuestion,
   getAddedQuestion,
   getRemovedQuestion,
+  higherMathExpr,
   produceAnswer,
   produceDate,
   produceMath,
+  rmQuestionPattern,
 } from "@/algorithms/Classifier";
 import { Main } from "@/algorithms/Main";
 
@@ -101,41 +105,52 @@ export default async function handler(
         break;
       }
       case "add": {
+        const addQuestionStartingPattern =/^(tambah(kan)?[ ]+pertanyaan )+.*/gi;
         const [addedQuestion, addedAnswer] = getAddedQuestion(query);
-        const savedQuestions = await prisma.savedQuestion.findMany({});
-        // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
-
-        // Question yang match, ambil id-nya terus taruh di variabel ini
-        let questionID: string | undefined;
-        const search = new Main(savedQuestions);
-        const data = search.getMatchingQuestion(addedQuestion, useKMP, true);
-        if (data.length > 0) {
-          questionID = data[0].id;
+        if (DateExpr.test(addedQuestion)
+        || higherMathExpr.test(addedQuestion)
+        || MathExpr.test(addedQuestion)
+        || addQuestionStartingPattern.test(addedQuestion)
+        || rmQuestionPattern.test(addedQuestion))
+        {
+          answer += `Pertanyaan ${addedQuestion} tidak bisa ditambahkan karena mengandung pola pertanyaan lain, jangan nambah yang aneh aneh, bodoh.`;
         }
-
-        const questionExist = questionID !== undefined;
-        answer += questionExist
-          ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
-          : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${addedAnswer}.`;
-
-        if (questionExist) {
-          await prisma.savedQuestion.update({
-            where: {
-              id: questionID,
-            },
-            data: {
-              answer: addedAnswer,
-              time: new Date(),
-            },
-          });
-        } else {
-          await prisma.savedQuestion.create({
-            data: {
-              answer: addedAnswer,
-              question: addedQuestion,
-              time: new Date(),
-            },
-          });
+        else{
+          const savedQuestions = await prisma.savedQuestion.findMany({});
+          // Find saved question with KMP/BM, if there's no matching question, set question exist = true.
+  
+          // Question yang match, ambil id-nya terus taruh di variabel ini
+          let questionID: string | undefined;
+          const search = new Main(savedQuestions);
+          const data = search.getMatchingQuestion(addedQuestion, useKMP, true);
+          if (data.length > 0) {
+            questionID = data[0].id;
+          }
+  
+          const questionExist = questionID !== undefined;
+          answer += questionExist
+            ? `Pertanyaan ${addedQuestion} sudah ada! Jawaban di-update ke ${addedAnswer}`
+            : `Pertanyaan ${addedQuestion} telah ditambah dengan jawaban ${addedAnswer}.`;
+  
+          if (questionExist) {
+            await prisma.savedQuestion.update({
+              where: {
+                id: questionID,
+              },
+              data: {
+                answer: addedAnswer,
+                time: new Date(),
+              },
+            });
+          } else {
+            await prisma.savedQuestion.create({
+              data: {
+                answer: addedAnswer,
+                question: addedQuestion,
+                time: new Date(),
+              },
+            });
+          }
         }
         break;
       }

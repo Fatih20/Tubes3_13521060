@@ -13,17 +13,13 @@ const questionType = [
 type QuestionClassification = (typeof questionType)[number];
 
 const QuestionPattern = /^/i;
-const MathExpr =
+export const MathExpr =
   /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/i;
-const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
-const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
+export const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
+export const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
+export const rmQuestionPattern = /^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
 const addQuestionPattern =
   /^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi;
-const addPQuestionPattern =
-  /^((masukkan|tambah(kan)?)[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban[ ]+personal)[ ]+([^\s]+.*)/gi;
-const rmQuestionPattern = /^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
-const rmPQuestionPattern =
-  /^(hapus(kan)?[ ]+pertanyaan[ ]+personal)[ ]+([^\s]+.*)/gi;
 
 export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression
@@ -33,29 +29,11 @@ export function getAddedQuestion(addString: string): string[] {
   return [question![3], question![5]];
 }
 
-export function getAddedQuestionP(addString: string): string[] {
-  //basically the personal type from getAddedQuestion
-  //I.S. string has been validated to be match the addPQuestionPattern regular expression
-  //F.S. return array of string, first element is the question, second element is the answer
-  addPQuestionPattern.lastIndex = 0;
-  let question = addPQuestionPattern.exec(addString);
-  console.log(question);
-  return [question![4], question![6]];
-}
-
 export function getRemovedQuestion(addString: string): string {
   //I.S. string has been validated to be match the rmQuestionPattern regular expression
   //F.S. return string of the question to be removed
   rmQuestionPattern.lastIndex = 0;
   let question = rmQuestionPattern.exec(addString);
-  return question![3];
-}
-
-export function getRemovedQuestionP(addString: string): string {
-  //I.S. string has been validated to be match the rmQuestionPattern regular expression
-  //F.S. return string of the question to be removed
-  rmPQuestionPattern.lastIndex = 0;
-  let question = rmPQuestionPattern.exec(addString);
   return question![3];
 }
 
