@@ -15,11 +15,12 @@ type QuestionClassification = (typeof questionType)[number];
 const QuestionPattern = /^/i;
 export const MathExpr =
   /^\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\))\s*(([-+*/])\s*(([-+]?([0-9]+\.)?[0-9]+)|(\([-+]?([0-9]+\.)?[0-9]+)\)))*\s*/i;
-export const higherMathExpr = /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
+export const higherMathExpr =
+  /^(((.[+*\-/].)*\s*(\(.*\))\s*([+*\-/]\(.*\))*)\s*)/i;
 export const DateExpr = /(?<=^|\s)[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}(?=\?|\s|$)/i;
-export const rmQuestionPattern = /^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/gi;
+export const rmQuestionPattern = /^(hapus(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)/i;
 const addQuestionPattern =
-  /^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/gi;
+  /^(tambah(kan)?[ ]+pertanyaan)[ ]+([^\s]+.*)[ ]+(dengan[ ]+jawaban)[ ]+([^\s]+.*)/i;
 
 export function getAddedQuestion(addString: string): string[] {
   //I.S. string has been validated to be match the addQuestionPattern regular expression

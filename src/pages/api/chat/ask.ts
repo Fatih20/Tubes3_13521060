@@ -58,7 +58,7 @@ export default async function handler(
     return;
   }
 
-  const question = body.question?.toLowerCase();
+  const question = body.question;
 
   if (!question) {
     res.statusMessage = "Question wasn't provided";
