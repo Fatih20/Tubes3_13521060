@@ -40,39 +40,36 @@ class Main {
     
     
     
-    let exactFound = false;
-    for (const element of this.ListQuestion) {
-      let exactMatchExist = algoType
-        ? this.KMPAlgorithm.check(substring, element.question)
-        : this.BMAlgorithm.check(substring, element.question);
-      if (exactMatchExist) {
-        Questions.enqueue(Math.abs(substring.length - element.question.length), element);
-        exactFound = true;
-      }
-      if (exactFound){
-        for(let i = 0; i < Questions.queue.length; i++){
-          console.log(Questions.queue[i][1].question);
+    // this.ListQuestion.forEach((element) => {
+      //   console.log("Pertanyaan di database", element.question);
+      // });
+      
+      
+      // Get first element, if > 90% then return
+      
+    if(!exact){
+      let exactFound = false;
+      for (const element of this.ListQuestion) {
+        let exactMatchExist = algoType
+          ? this.KMPAlgorithm.check(substring, element.question)
+          : this.BMAlgorithm.check(substring, element.question);
+        if (exactMatchExist) {
+          Questions.enqueue(Math.abs(substring.length - element.question.length), element);
+          exactFound = true;
         }
-        return [Questions.queue[0][1]];
       }
-      else {
-        // Get question match percentage
+      if (exactFound) return [Questions.queue[0][1]];
+
+      
+      // Get question match percentage
+      for (const element of this.ListQuestion) {
         let matchPercent = this.DistanceAlgorithm.getDistance(
           substring,
           element.question
         );
         Questions.enqueue(matchPercent, element);
       }
-    }
 
-    // this.ListQuestion.forEach((element) => {
-    //   console.log("Pertanyaan di database", element.question);
-    // });
-
-
-    // Get first element, if > 90% then return
-
-    if(!exact){
       let elmt = Questions.dequeue();
       if (elmt !== undefined && elmt[0] > 0.9) {
         return [elmt[1]];
